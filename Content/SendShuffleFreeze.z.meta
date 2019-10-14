@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "SendShuffleFreeze",
+		uint64 ResourceId = 578d2bd5e7fad18b,
+	},
+},

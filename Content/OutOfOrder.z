@@ -1,0 +1,47 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    OutOfOrder
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    6/15/2016
+Brief Description:
+  if thhe player goes out of order of the seasons this will send a sound  event
+*******************************************************************************/
+class OutOfOrder : ZilchComponent
+{
+    // the sound it will send
+    [Property]
+    var Sound : SoundCue;
+    // the pitch of that sound
+    [Property]
+    var Pitch : Real = 0.0;
+    // and the volume
+    [Property]
+    var Volume : Real = 1.0;
+    
+    // this will track wether or not the player goes in order
+    var Tracker : Integer = 1;
+    
+    function Initialize(init : CogInitializer)
+    {
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Space, Events.IncreaseMultiplierEvent, this.OnMultiGained);
+    }
+    
+    
+    function OnMultiGained(event : IncreaseMultiplierEvent)
+    {
+        // if the player goes out of order
+        if(event.Multiplier == 1 && this.Tracker == 2)
+        {
+            // send the sound event
+            this.Space.DispatchEvent(Events.PlaySoundEvent, PlaySoundEvent(this.Sound, this.Pitch, this.Volume));
+        }
+        this.Tracker = event.Multiplier;
+    }
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+    }
+}

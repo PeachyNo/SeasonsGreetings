@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "ShowMulti",
+		uint64 ResourceId = 5787e7402fe895df,
+	},
+},

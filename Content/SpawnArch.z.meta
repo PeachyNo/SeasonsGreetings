@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "SpawnArch",
+		uint64 ResourceId = 578587298c72994b,
+	},
+},

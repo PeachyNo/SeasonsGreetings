@@ -1,0 +1,15 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "DestroySoundArch",
+		uint64 ResourceId = 57cdf873cb59e9fe,
+	},
+	ContentTags = 
+	{
+		Array Tags = 
+		[
+			"Sound",
+		],
+	},
+},

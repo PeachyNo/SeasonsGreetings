@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "SlideShow",
+		uint64 ResourceId = 578fe2b48123e058,
+	},
+},

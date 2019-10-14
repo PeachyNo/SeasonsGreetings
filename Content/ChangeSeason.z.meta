@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "ChangeSeason",
+		uint64 ResourceId = 57e30f31470420df,
+	},
+},

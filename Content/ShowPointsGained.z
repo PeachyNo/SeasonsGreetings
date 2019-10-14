@@ -1,0 +1,81 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    ShowPointsGained
+author      Alex Nash
+course      GAM100
+Project     Seasons Greetings
+due date    5/13/2019
+Brief Description:
+  Shows how many points gained every time you click on a tile. Unless you get 0
+    points from the tile.
+*******************************************************************************/
+class ShowPointsGained : ZilchComponent
+{
+    sends PointsGainedEvent : PointsGainedEvent;
+    
+    var PointsEarned : Integer = 0;
+    /* This is here to make sure the points don't go up aslong as they keep 
+        getting points  */
+    var OnlyOnce : Boolean = false;
+    
+    var Multiplier : Integer = 1;
+    
+    var SeasonNum : Integer = 4;
+    
+    function Initialize(init : CogInitializer)
+    {
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Space, Events.PointsGainedEvent, this.OnPointsGained);
+        Zero.Connect(this.Space, Events.IncreaseMultiplierEvent, this.OnMultiGained);
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+    }
+    
+    function OnMultiGained(event : IncreaseMultiplierEvent)
+    {
+        //this.Multiplier = event.Multiplier;
+        if(event.Multiplier == 1)
+        {
+            this.Multiplier = 1;
+            return;
+        }
+        else if(this.Multiplier < 4)
+        {
+            if(this.SeasonNum == 4)
+            {
+                this.SeasonNum = 0;
+            }
+            if(this.SeasonNum == 0)
+            {
+                this.Multiplier *= 2;
+            }
+            ++this.SeasonNum;
+            
+        }
+    }
+    
+    function OnPointsGained(event : PointsGainedEvent)
+    {
+        if(event.CurrentPoints <= 0)
+        {
+            this.Owner.Destroy();
+        }
+        
+        if(this.OnlyOnce == false)
+        {
+            /*  */
+            this.PointsEarned = event.CurrentPoints;
+            this.Owner.SpriteText.Text = "+`this.PointsEarned`";
+            var moveSeq = Action.Group(this.Owner.Actions);
+            Action.Property(moveSeq, @this.Owner.Transform.Translation,
+                Real3(this.Owner.Transform.Translation.X, this.Owner.Transform.Translation.Y + 10.0, 0.0),
+                5, Ease.QuadInOut);
+
+            this.PointsEarned = event.CurrentPoints;
+            this.Owner.SpriteText.Text = "+`this.PointsEarned * this.Multiplier`";
+            this.OnlyOnce = true;
+        }
+    }
+}

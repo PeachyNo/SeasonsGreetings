@@ -1,0 +1,11 @@
+DataContent = 
+{
+	DataBuilder = 
+	{
+		string Name = "StartSelect,UI,set93,talking tones,bright percussion,playful,toonish,light ambience,select",
+		uint64 ResourceId = 578795f9b2051de6,
+		string LoaderType = "SoundCue",
+		uint Version = 0,
+		bool ShowInEditor = true,
+	},
+},

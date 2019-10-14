@@ -1,0 +1,39 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    BlockDestroy
+author      Alex Nash
+course      GAM100
+Project     Seasons Greetings
+due date    5/13/2019
+Brief Description:
+  Destroy all tiles of a certain type once the tile this is on has been clicked 
+    and the tile type to be destroyed has been clicked.
+*******************************************************************************/
+class BlockDestroy : ZilchComponent
+{
+    [Dependency]
+    var Reactive: Reactive;
+    /* This is used to make the player only need one of a special tile too use it. */
+    var OneIsEnough : Integer = 3;
+    var Tile : Tile;
+    var Board : TheBoard;
+    [Property]
+    var BoardCogPath : CogPath;
+    /* So we can set the tile to be cleared while still having the tile type. */
+    var Type : Integer;
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Owner, Events.MouseUp, this.OnMouseUp);
+        this.Board = this.Space.FindObjectByName("Board").TheBoard;
+        /* So we can get this tiles type */
+        this.Tile = this.Owner.Tile;
+    }
+    function OnMouseUp(event : MouseEvent)
+    {
+        this.Type = this.Tile.Type;
+        this.Tile.Type = this.Board.Cleared;
+        this.Board.BoardCheck(this.Type, this.OneIsEnough);
+        /* This sets the if statement in Tile to go through the next time you click on a tile. */
+        this.Board.DestroyActive = true;
+    }
+}

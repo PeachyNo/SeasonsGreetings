@@ -1,0 +1,47 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    WinLoseScreen
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    6/15/2016
+Brief Description:
+  move the win or lose screen into view
+*******************************************************************************/
+class WinLoseScreen : ZilchComponent
+{
+    // if it is the lose or win menu
+    [Property]
+    var WinOrLose : Boolean = true;
+    
+    // howw quickly it moves
+    [Property]
+    var EaseTime : Real = 1;
+    
+    // how it will move
+    [Property]
+    var EaseType : SampleCurve;
+    
+    // where it will move
+    [Property]
+    var Where : Real3 = Real3(0.0, 0.0, 0.0);
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.WinLoseEvent, this.OnWinEvent);
+    }
+    
+    
+    
+    function OnWinEvent(event : WinLoseEvent)
+    {
+        // if the win condition matches what this objects is
+        // move the menu down
+        if(this.WinOrLose == event.DidWin)
+        {
+            var masterSeq = Action.Group(this.Owner.Actions);
+            Action.Property(masterSeq, @this.Owner.Transform.Translation,
+                            this.Where, this.EaseTime, this.EaseType);
+        }
+    }
+}

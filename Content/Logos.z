@@ -1,0 +1,43 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    Logos
+author      Alex Nash
+course      GAM100
+Project     Seasons Greetings
+due date    5/13/2019
+Brief Description:
+  Present the logos of DigiPen and the Zero Engine at the begining of the game.
+*******************************************************************************/
+class Logos : ZilchComponent
+{
+    var Elapsed : Real;
+    [Property]
+    var LevelToLoad : Level = null;
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Owner, Events.MouseUp, this.OnMouseUp);
+        Zero.Connect(this.Space, Events.ButtonDown, this.OnKeyBoardPress);
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        this.Elapsed += event.Dt;
+        var moveSeq = Action.Group(this.Owner.Actions);
+        Action.Property(moveSeq, @this.Owner.Sprite.Visible, Boolean(true),
+            7.0, Ease.QuadInOut);
+        if(this.Elapsed >= 10)
+        {
+            this.Space.LoadLevel(this.LevelToLoad);
+        }
+        
+    }
+    function OnMouseUp(event : MouseEvent)
+    {
+        this.Space.LoadLevel(this.LevelToLoad);
+    }
+    function OnKeyBoardPress(event : Event)
+    {
+        this.Space.LoadLevel(this.LevelToLoad);
+    }
+}

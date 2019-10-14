@@ -1,0 +1,29 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    SaveStarData
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    6/15/2016
+Brief Description:
+  this was just for testing the data saving
+*******************************************************************************/
+class SaveStarData : ZilchComponent
+{
+    [Dependency]
+    var StarPoints : StarPoints;
+    [Property]
+    var DataArc : Archetype;
+    
+    var DataCog : Cog;
+    
+    function Initialize(init : CogInitializer)
+    {
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        this.DataCog = Zero.ObjectStore.RestoreOrArchetype("Data", this.DataArc, this.Space);
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+    }
+}

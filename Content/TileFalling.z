@@ -1,0 +1,127 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    TileFalling
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    5/13/2019
+Brief Description:
+  This will make the tiles fall when there is space and spawn in new tiles when 
+  needed
+*******************************************************************************/
+class TileFalling : ZilchComponent
+{
+    [Dependency]
+    var TheBoard : TheBoard;
+    
+    [Property]
+    var EaseTime : Real = 0.1;
+    
+    [Property]
+    var EaseType : Ease = Ease.QuadIn;
+    
+    
+    function Initialize(init : CogInitializer)
+    {
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    }
+    
+    // This will spawn in new tiles over the selected row and return an array of the new tiles
+    function SpawnBlocks(numNewTiles : Integer, row : Integer, theBoard : TheBoard) : Array[Tile]
+    {
+        //Console.WriteLine("NT: `numNewTiles`");
+        
+        //the return array
+        var newRow : Array[Tile] = new Array[Tile](numNewTiles);
+        
+        var offset = 0;
+        
+        // this will spawn in the new tiles above the board
+        for(var y = 0; y < numNewTiles; ++y)
+        {
+            newRow[y] = theBoard.TileSpawn(row, theBoard.BoardsizeY + y).Tile;
+            ++offset;
+        }
+        
+        // returns the new array of tiles
+        return newRow;
+    }
+    
+    // this makes the blockss fall and will call the spawnblock function
+    function BlockFall(theBoard : TheBoard, row : Integer)
+    {
+        // keeps track of the number of null spaces
+        var numNull = 0;
+        
+        // keps track of the position of the lowest null tile
+        var firstNull = -1;
+        var offset = 0;
+        
+        var masterSeq = Action.Group(this.Owner.Actions);
+        
+        // this is a que of the tiles that need to move down
+        var newTiles = new Array[Tile]();
+        
+        //this runs through each tile in a row
+        for(var y = 0; y < theBoard.BoardsizeY; ++y)
+        {
+            //if a null is found
+            if(theBoard.Board[y][row] == null)
+            {
+                //add to the null count
+                ++numNull;
+                // if the its the first
+                if(firstNull == -1)
+                {
+                    //keep track of the first null
+                    firstNull = y;
+                }
+            }
+            // if it is not a null and the first null has already been found
+            else if(theBoard.Board[y][row] != null && firstNull != -1)
+            {
+                //adds the tile to the que of tile that neeed to move
+                newTiles.Add(theBoard.Board[y][row]);
+            }
+        }
+        
+        // if there are no nulls found end the function
+        if(numNull == 0)
+        {
+            return;
+        }
+        
+        //spawn in new blocks
+        var newRow = this.SpawnBlocks(numNull, row, theBoard);
+        
+        // add the new blocks to the que
+        for(var i = 0; i < numNull; ++i)
+        {
+            newTiles.Add(newRow[i]);
+        }
+        
+        // while there are still things within the que
+        while(newTiles.Count > 0)
+        {
+            var tile = newTiles[0];
+            
+            //set its Y position to the apropriate spot
+            tile.TileY = firstNull + offset;
+            //set it in the array for the board
+            theBoard.Board[firstNull + offset][row] = tile;
+            
+            //move the tile into position
+            Action.Property(masterSeq, @tile.Owner.Transform.Translation,
+                            theBoard.GivePos(row, firstNull + offset), this.EaseTime, this.EaseType);
+            
+            ++offset;
+            
+            // remove the tile that was moved from the que
+            newTiles.RemoveAt(0);
+        }
+        
+        
+    }
+    
+}
+

@@ -1,0 +1,71 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    Timer
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    5/13/2019
+Brief Description:
+  This is a timer counting down in seconds for the inputed time
+*******************************************************************************/
+class Timer : ZilchComponent
+{
+    /* Keep track of the time */
+    [Property]
+    var DisplayTime : Integer = 101;
+    
+    /* this will keep track of the true timer */
+    var RealTime : Real = 0;
+    
+    /* this will track if the timer is finished or not */
+    var IsDone : Boolean = false;
+    
+    var Running : Boolean = true;
+    
+    var Time : Real 
+    {
+        get
+        {
+            return this.RealTime;
+        }
+        
+        set 
+        {
+            this.DisplayTime = value as Integer;
+            this.RealTime = value;
+        }
+    }
+    
+    function Initialize(init : CogInitializer)
+    {
+        /* connect to on logic update */
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        this.DisplayTime += 1;
+        /* make both counters equal */
+        this.RealTime = this.DisplayTime;
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        if (this.Running)
+        {
+            /* so we know how long logic update took to update */
+            this.RealTime -= event.Dt;
+            
+            /* when the real conter goes down one second */
+            if(this.RealTime <= this.DisplayTime && this.IsDone == false)
+            {
+                /* bring display counter down one second */
+                this.DisplayTime -= 1;
+            }
+            
+            /* if the counters get to 0 destroy the object */
+            if(this.DisplayTime == 0)
+            {
+                this.IsDone = true;
+            }
+        }
+    }
+}
+
+

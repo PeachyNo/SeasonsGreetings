@@ -1,0 +1,31 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    Timer
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    5/13/2019
+Brief Description:
+  This will display the timer
+*******************************************************************************/
+class TimerDisplay : ZilchComponent
+{
+    /* make sure the object has the correct things */
+    [Dependency]
+    var SpriteText: SpriteText;
+    
+    [Dependency]
+    var Timer: Timer;
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        /* shows the timer */
+        this.Owner.SpriteText.Text = "Timer: `this.Timer.DisplayTime`";
+            
+    }
+}

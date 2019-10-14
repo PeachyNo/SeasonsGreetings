@@ -1,0 +1,73 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    Ticking
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    6/15/2016
+Brief Description:
+  this will make the timer tick when the needed
+*******************************************************************************/
+class Ticking : ZilchComponent
+{
+    [Dependency]
+    var Timer : Timer;
+    
+    // it can be a constant ticking
+    [Property]
+    var Constant : Boolean = false;
+    
+    // When the ticking will start
+    [Property]
+    var Start : Integer = 0;
+    
+    // what the ticking will sound like
+    [Property]
+    var SoundCue : SoundCue;
+    
+    // How loud the ticking will be
+    [Property]
+    var Volume : Real = 1.0;
+    
+    // what pitch the ticking will be
+    [Property]
+    var Pitch : Real = 0.0;
+    
+    // what particle will spawn when the ticking will start
+    [Property]
+    var  ParticleArc : Archetype = Archetype.Tick;
+    
+    // where the particle will spawn
+    [Property]
+    var ParPos : Real3;
+    
+    // keep track of the time onthhe timer
+    var Time : Integer;
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        
+        // set the time too keep track of
+        this.Time = this.Timer.DisplayTime;
+    }
+    
+    
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        // if the time has changed
+        if(this.Time != this.Timer.DisplayTime && this.Timer.DisplayTime > 0)
+        {
+            // change the time tracker
+            this.Time = this.Timer.DisplayTime;
+            // if it should start ticking
+            if(this.Constant || this.Start >= this.Time)
+            {
+                // send the sound event and create the particle effect
+                this.Space.DispatchEvent(Events.PlaySoundEvent, PlaySoundEvent(this.SoundCue, this.Pitch, this.Volume));
+                this.Space.CreateAtPosition(this.ParticleArc, this.ParPos); 
+            }
+        }
+    }
+}

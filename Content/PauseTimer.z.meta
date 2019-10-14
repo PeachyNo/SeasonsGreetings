@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "PauseTimer",
+		uint64 ResourceId = 57b124332bc47e37,
+	},
+},

@@ -1,0 +1,35 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    TimedDeath
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    6/15/2016
+Brief Description:
+  this will destroy the owner after tthe set amount of time has past
+*******************************************************************************/
+class TimedDeath : ZilchComponent
+{
+    // how long it will last in seconds
+    [Property]
+    var Lifetime : Real = 1.0;
+    
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    }
+    
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        // subtract from the liftime of the object
+        this.Lifetime -= event.Dt;
+        // if the lifetime has run out
+        if(this.Lifetime <= 0.0)
+        {
+            // destrtoy the object
+            this.Owner.Destroy();
+        }
+    }
+}

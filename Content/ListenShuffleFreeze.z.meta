@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "ListenShuffleFreeze",
+		uint64 ResourceId = 578d291d39283aca,
+	},
+},

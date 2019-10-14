@@ -1,0 +1,39 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    SoundListen
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    6/15/2016
+Brief Description:
+  Listens for sound events and plays the recieved sounds
+*******************************************************************************/
+class SoundListen : ZilchComponent
+{
+    [Dependency]
+    var Sound : SimpleSound;
+    
+    [Dependency]
+    var SoundEmitter : SoundEmitter;
+    
+    
+    function Initialize(init : CogInitializer)
+    {
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Space, Events.PlaySoundEvent, this.OnSoundEvent);
+    }
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+    }
+    
+    function OnSoundEvent(event : PlaySoundEvent)
+    {
+        // play the  sound  that it recieves with the right pitch and volume
+        this.SoundEmitter.Pitch = event.Pitch;
+        this.SoundEmitter.Volume = event.Volume;
+        this.Sound.Cue = event.Sound;
+        this.Sound.Play();
+        
+    }
+}

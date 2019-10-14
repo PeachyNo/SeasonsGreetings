@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "WinLoseScreen",
+		uint64 ResourceId = 57a350a4f476deeb,
+	},
+},

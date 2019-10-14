@@ -1,0 +1,62 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    LargerthenSmall
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    5/13/2016
+Brief Description:
+  Make the selected sprite larger for a time then shinks then make is larger 
+  ond so on and soforth
+*******************************************************************************/
+class LargerthenSmall : ZilchComponent
+{
+    // how much you want it to change
+    [Property]
+    var Size : Real3;
+    
+    // how quickly
+    [Property]
+    var EaseTime : Real = 1;
+    
+    [Property]
+    var EaseType : Ease = Ease.QuadIn;
+    
+    // this function make it grow
+    function Grow()
+    {
+        var masterSeq = Action.Sequence(this.Owner.Actions);
+        
+        // enlarges it using an action
+        Action.Property(masterSeq, @this.Owner.Transform.Scale,
+                        this.Owner.Transform.Scale + this.Size, this.EaseTime, this.EaseType);
+        
+        //calls the shrink function
+        Action.Call(masterSeq, this.Shrink);
+    }
+    
+    function Shrink()
+    {
+        var masterSeq = Action.Sequence(this.Owner.Actions);
+        
+        // shrinks it using an action
+        Action.Property(masterSeq, @this.Owner.Transform.Scale,
+                        this.Owner.Transform.Scale - this.Size, this.EaseTime, this.EaseType);
+        // calls the grow function
+        Action.Call(masterSeq, this.Grow);
+        
+    }
+    
+    function Initialize(init : CogInitializer)
+    {
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        //this will start the chane of events
+        this.Grow();
+    }
+    
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        
+    }
+}

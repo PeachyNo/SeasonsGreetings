@@ -1,0 +1,8 @@
+TextContent = 
+{
+	TextBuilder = 
+	{
+		string Name = "TimeAddDemo",
+		uint64 ResourceId = 578d094e2b34970e,
+	},
+},

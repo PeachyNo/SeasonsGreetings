@@ -1,0 +1,30 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    StopTimer
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    6/15/2016
+Brief Description:
+  this will stop the timer if the win event is called
+*******************************************************************************/
+class StopTimer : ZilchComponent
+{
+    [Dependency]
+    var Timer : Timer;
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.WinLoseEvent, this.OnWinEvent);
+    }
+    
+    function OnWinEvent(event : WinLoseEvent)
+    {
+        // when the win event iis called it will stop the timer
+        this.Timer.Running = false;
+    }
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+    }
+}

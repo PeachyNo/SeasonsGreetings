@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "RemoveExtranous",
+		uint64 ResourceId = 57972634e2514eaf,
+	},
+},

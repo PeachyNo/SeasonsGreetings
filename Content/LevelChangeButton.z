@@ -1,0 +1,35 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    LevelChangeButton
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    5/13/2019
+Brief Description:
+  this will change the level when the owner is clicked on
+*******************************************************************************/
+class LevelChangeButton : ZilchComponent
+{
+    [Dependency]
+    var Reactive : Reactive;
+    
+    //which level to change to
+    [Property]
+    var LevelChange : Level = null;
+    
+    function Initialize(init : CogInitializer)
+    {
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Owner, Events.MouseUp, this.OnMouseUp);
+        
+    }
+    //when clicked on, it will load to the next level
+    function OnMouseUp(event : MouseEvent)
+    {
+        this.Space.LoadLevel(this.LevelChange);
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+    }
+}

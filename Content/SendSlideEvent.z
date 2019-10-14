@@ -1,0 +1,86 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    SendSlideEvent
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    6/15/2016
+Brief Description:
+  this will send an event to move the slides
+*******************************************************************************/
+class SendSlideEvent : ZilchComponent
+{
+    [Dependency]
+    var Reactive : Reactive;
+    
+    // choose which button next = true, prev = false
+    [Property]
+    var  NextOrPrev : Boolean = true;
+    
+    // which slide it will start on
+    [Property]
+    var Start : Integer = 0;
+    
+    // how many slides there are
+    [Property]
+    var Range : Integer = 1;
+    
+    function Initialize(init : CogInitializer)
+    {
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Owner, Events.MouseUp, this.OnMouseUp);
+        Zero.Connect(this.Space, Events.SlideEvent, this.OnSlideEvent);
+        // if it is the first slide and is thhe prev button turn it off
+        if (this.Start == 0)
+        {
+            this.Reactive.Active = this.NextOrPrev;
+        }
+        // if it starts at the last slide and is the next buttonn turn it off
+        if (this.Start == this.Range)
+        {
+            this.Reactive.Active = !this.NextOrPrev;
+        }
+    }
+    
+    function OnMouseUp(event : MouseEvent)
+    {
+        // if it is the next button and it is not the end of the slides
+        if(this.NextOrPrev && (this.Start + 1) <= this.Range)
+        {
+            ++this.Start;
+            // move the  slides
+            this.Space.DispatchEvent(Events.SlideEvent, SlideEvent(this.Start));
+            // if it is the end of the slides
+            if (this.Start == this.Range)
+            {
+                // turn the button off 
+                this.Reactive.Active = false;
+            }
+        }
+        // if it si the prev button and it is not the fisrt slide
+        else if(this.NextOrPrev == false && (this.Start - 1) >= 0)
+        {
+            --this.Start;
+            // move the slides
+            this.Space.DispatchEvent(Events.SlideEvent, SlideEvent(this.Start));
+            // if it is now at the start turn the button back off
+            if (this.Start == 0)
+            {
+                this.Reactive.Active = false;
+            }
+        }
+        
+    }
+    
+    
+    function OnSlideEvent(event : SlideEvent)
+    {
+        // if the slides move at all set the slide tracker and make sure the button is on
+        this.Reactive.Active = true;
+        this.Start = event.Condition;
+    }
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+    }
+}

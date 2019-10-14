@@ -1,0 +1,91 @@
+class SeasonOrder : ZilchComponent
+{
+    [Dependency]
+    var Sprite : Sprite;
+    
+    [Property]
+    var Multiplier : Integer = 2;
+    
+    var Standard : Integer = 1;
+    
+    var SeasonCheck : Integer = 0;
+    
+    var PrevSeason : Array[Integer] = new Array[Integer]();
+    
+    var NumberSeasons : Integer = 4;
+    
+    function Initialize(init : CogInitializer)
+    {
+        for(var i = 0; i < this.NumberSeasons; ++i)
+        {
+            this.PrevSeason.Add(0);
+        }
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Space, Events.ChangeSeasonsEvent, this.OnChangeSeason);
+        Zero.Connect(this.Space, Events.IncreaseMultiplierEvent, this.OnMultiGained);
+        
+        
+        this.Owner.Sprite.SpriteSource = SpriteSource.Spring;
+    }
+    
+    function OnMultiGained(event : IncreaseMultiplierEvent)
+    {
+        
+    }
+    
+    function OnChangeSeason(event : ChangeSeasonsEvent)
+    {
+        this.Owner.Sprite.Visible = true;
+        this.SeasonCheck = event.Season;
+        if(this.SeasonCheck > 4)
+        {
+            return;
+        }
+        else if(this.SeasonCheck == 1)
+        {
+            this.Owner.Sprite.SpriteSource = SpriteSource.Summer;
+        }
+        else if(this.SeasonCheck == 2)
+        {
+            this.Owner.Sprite.SpriteSource = SpriteSource.Fall;
+        }
+        else if(this.SeasonCheck == 3)
+        {
+            this.Owner.Sprite.SpriteSource = SpriteSource.Winter;
+        }
+        else if(this.SeasonCheck == 4)
+        {
+            this.Owner.Sprite.SpriteSource = SpriteSource.Spring;
+        }
+        
+        this.PrevSeason[0] = this.PrevSeason[1];
+        this.PrevSeason[1] = this.PrevSeason[2];
+        this.PrevSeason[2] = this.PrevSeason[3];
+        this.PrevSeason[3] = this.SeasonCheck;
+              
+        if(this.PrevSeason[0] == 1 && this.PrevSeason[1] == 2 && this.PrevSeason[2] == 3 && this.PrevSeason[3] == 4)
+        {
+            this.Space.DispatchEvent(Events.IncreaseMultiplierEvent, IncreaseMultiplierEvent(this.Multiplier));
+        }
+        else if(this.PrevSeason[0] == 4 && this.PrevSeason[1] == 1 && this.PrevSeason[2] == 2 && this.PrevSeason[3] == 3)
+        {
+            this.Space.DispatchEvent(Events.IncreaseMultiplierEvent, IncreaseMultiplierEvent(this.Multiplier));
+        }
+        else if(this.PrevSeason[0] == 3 && this.PrevSeason[1] == 4 && this.PrevSeason[2] == 1 && this.PrevSeason[3] == 2)
+        {
+            this.Space.DispatchEvent(Events.IncreaseMultiplierEvent, IncreaseMultiplierEvent(this.Multiplier));
+        }
+        else if(this.PrevSeason[0] == 2 && this.PrevSeason[1] == 3 && this.PrevSeason[2] == 4 && this.PrevSeason[3] == 1)
+        {
+            this.Space.DispatchEvent(Events.IncreaseMultiplierEvent, IncreaseMultiplierEvent(this.Multiplier));
+        }
+        else
+        {
+            this.Space.DispatchEvent(Events.IncreaseMultiplierEvent, IncreaseMultiplierEvent(this.Standard));
+        }
+    }
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+    }
+}

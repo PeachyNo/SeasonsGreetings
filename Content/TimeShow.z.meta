@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "TimeShow",
+		uint64 ResourceId = 579b2e90624b3e80,
+	},
+},

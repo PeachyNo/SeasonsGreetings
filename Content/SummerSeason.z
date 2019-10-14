@@ -1,0 +1,64 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    SummerSeason
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    5/13/2019
+Brief Description:
+  This will enlarge the owner when summer is the result of the seasons 
+  change event
+*******************************************************************************/
+class SummerSeason : ZilchComponent
+{
+    
+    // how big it will be when it gets larger 
+    [Property]
+    var LargeSize : Real3;
+    
+    // how big it will be when it shrinks
+    [Property]
+    var SmallSize : Real3;
+    
+    // how quickly it expands/shrinks
+    [Property]
+    var EaseTime : Real = 1;
+    
+    //type of ease
+    [Property]
+    var EaseType : Ease = Ease.QuadIn;
+    
+    
+    // 2 is the target season
+    var ObjectSeason : Integer = 2;
+    
+    function Initialize(init : CogInitializer)
+    {
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Space, Events.ChangeSeasonsEvent, this.OnChangeSeason);
+        this.Owner.Sprite.Visible = false;
+    }
+    
+    
+    function OnChangeSeason(event : ChangeSeasonsEvent)
+    {
+        var masterSeq = Action.Group(this.Owner.Actions);
+        // if its summer
+        if(event.Season == this.ObjectSeason)
+        {
+            //make the owner visable
+            this.Owner.Sprite.Visible = true;
+        }
+        else
+        {
+            //if not make it invisable
+            this.Owner.Sprite.Visible = false;
+        }
+        
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        
+    }
+}

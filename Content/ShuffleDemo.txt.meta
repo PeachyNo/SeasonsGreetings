@@ -1,0 +1,8 @@
+TextContent = 
+{
+	TextBuilder = 
+	{
+		string Name = "ShuffleDemo",
+		uint64 ResourceId = 578d0bccef623c6d,
+	},
+},

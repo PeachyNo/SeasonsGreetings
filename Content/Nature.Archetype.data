@@ -1,0 +1,33 @@
+Cog = 
+{
+	LinkId = 
+	{
+		uint Id = 1,
+	},
+	Named = 
+	{
+		string Name = "music",
+	},
+	Archetyped = 
+	{
+		string Name = "57f872ed6207e2a6:Nature",
+	},
+	Transform = 
+	{
+		Vec3 Translation = [-20.6029129, 0.782389879, 0],
+		Vec3 Scale = [1, 1, 1],
+		Quat Rotation = [0, 0, 0, 1],
+	},
+	SoundEmitter = 
+	{
+		float Volume = 1,
+		float Pitch = 2,
+		bool Positional = false,
+		int Version = 1,
+	},
+	SimpleSound = 
+	{
+		bool StartPlaying = true,
+		string CueName = "57f872da60bd751e:Nature",
+	},
+},

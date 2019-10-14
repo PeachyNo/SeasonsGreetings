@@ -1,0 +1,11 @@
+DataContent = 
+{
+	DataBuilder = 
+	{
+		string Name = "StartSelect,UI,set57,camera mechanics,servo,clicks clacks,meaty,operative,forward",
+		uint64 ResourceId = 57bf8484847d4d6f,
+		string LoaderType = "SoundCue",
+		uint Version = 0,
+		bool ShowInEditor = true,
+	},
+},

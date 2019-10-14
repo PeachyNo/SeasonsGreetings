@@ -1,0 +1,11 @@
+AudioContent = 
+{
+	SoundBuilder = 
+	{
+		string Name = "StartSelect,UI,set57,camera mechanics,servo,clicks clacks,meaty,operative,forward",
+		uint64 ResourceId = 57bf857b84676416,
+		bool Compressed = false,
+		uint Quality = 100,
+		SoundLoadType LoadType = Decompress,
+	},
+},

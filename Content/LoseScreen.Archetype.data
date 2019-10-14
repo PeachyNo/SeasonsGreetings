@@ -1,0 +1,530 @@
+Cog = 
+{
+	LinkId = 
+	{
+		uint Id = 1,
+	},
+	Named = 
+	{
+		string Name = "YOU LOSE",
+	},
+	Archetyped = 
+	{
+		string Name = "57853f8fde557cc8:LoseScreen",
+	},
+	Transform = 
+	{
+		Vec3 Translation = [0, 36.2101173, 0],
+		Vec3 Scale = [4, 4, 1],
+		Quat Rotation = [0, 0, 0, 1],
+	},
+	Sprite = 
+	{
+		bool Visible = true,
+		bool VisibilityCulling = true,
+		bool VisibilityEvents = true,
+		bool CastShadows = false,
+		Vec4 Color = [0.819607913, 0.756862819, 0.345098048, 1],
+		BlendMode BlendMode = Alpha,
+		SpriteGeometryMode GeometryMode = ZPlane,
+		string SpriteLayer = "57b665483bad4412:Popup",
+		string SpriteSource = "544a2f6a6b8b6c88:TextBox1",
+		bool RenderMask = false,
+		bool FlipX = false,
+		bool FlipY = false,
+		bool AnimationActive = true,
+		float AnimationSpeed = 1,
+		uint StartFrame = 0,
+	},
+	Area = 
+	{
+		Vec2 Size = [3, 3],
+		Location Origin = Center,
+	},
+	WinLoseScreen = 
+	{
+		bool WinOrLose = false,
+		float EaseTime = 4,
+		string EaseType = "57a352af16ed0eed:Bounce",
+		Vec3 Where = [0, 0, 0],
+	},
+	WinLoseTone = 
+	{
+		bool WinOrLose = false,
+		string Sound = "57b26aaed14bef99:ToniosFarm-Lose",
+		float Pitch = 0,
+		float Volume = 0.25,
+	},
+	Hierarchy = 
+	{
+		Cog = 
+		{
+			LinkId = 
+			{
+				uint Id = 2,
+			},
+			Named = 
+			{
+				string Name = "SpriteText",
+			},
+			Transform = 
+			{
+				Vec3 Translation = [0, 1, 0],
+				Vec3 Scale = [0.5, 0.5, 1],
+				Quat Rotation = [0, 0, 0, 1],
+			},
+			Sprite = 
+			{
+				bool Visible = true,
+				bool VisibilityCulling = true,
+				bool VisibilityEvents = true,
+				bool CastShadows = false,
+				Vec4 Color = [1, 1, 1, 1],
+				BlendMode BlendMode = Alpha,
+				SpriteGeometryMode GeometryMode = ZPlane,
+				string SpriteLayer = "57b6655c39d6eb85:PupupDisplay",
+				string SpriteSource = "578d4cf8b01b510c:YouFailed",
+				bool RenderMask = false,
+				bool FlipX = false,
+				bool FlipY = false,
+				bool AnimationActive = true,
+				float AnimationSpeed = 1,
+				uint StartFrame = 0,
+			},
+			Area = 
+			{
+				Vec2 Size = [6.19999981, 1.60000002],
+				Location Origin = Center,
+			},
+			Hierarchy = 
+			{
+			},
+		},
+		Cog = 
+		{
+			LinkId = 
+			{
+				uint Id = 3,
+			},
+			Named = 
+			{
+				string Name = "Shadow",
+			},
+			Transform = 
+			{
+				Vec3 Translation = [-0.0500000007, -0.0500000007, 0],
+				Vec3 Scale = [1, 1, 1],
+				Quat Rotation = [0, 0, 0, 1],
+			},
+			Sprite = 
+			{
+				bool Visible = true,
+				bool VisibilityCulling = true,
+				bool VisibilityEvents = true,
+				bool CastShadows = false,
+				Vec4 Color = [0, 0, 0, 1],
+				BlendMode BlendMode = Alpha,
+				SpriteGeometryMode GeometryMode = ZPlane,
+				string SpriteLayer = "57b66544c588b1d9:PopupShadow",
+				string SpriteSource = "544a2f6a6b8b6c88:TextBox1",
+				bool RenderMask = false,
+				bool FlipX = false,
+				bool FlipY = false,
+				bool AnimationActive = true,
+				float AnimationSpeed = 1,
+				uint StartFrame = 0,
+			},
+			Area = 
+			{
+				Vec2 Size = [3, 3],
+				Location Origin = Center,
+			},
+			Hierarchy = 
+			{
+			},
+		},
+		Cog = 
+		{
+			LinkId = 
+			{
+				uint Id = 4,
+			},
+			Named = 
+			{
+				string Name = "RETRY",
+			},
+			Transform = 
+			{
+				Vec3 Translation = [0, -0.300000012, 0],
+				Vec3 Scale = [1, 1, 1],
+				Quat Rotation = [0, 0, 0, 1],
+			},
+			Sprite = 
+			{
+				bool Visible = true,
+				bool VisibilityCulling = true,
+				bool VisibilityEvents = true,
+				bool CastShadows = false,
+				Vec4 Color = [1, 0.926549911, 0.435000002, 1],
+				BlendMode BlendMode = Alpha,
+				SpriteGeometryMode GeometryMode = ZPlane,
+				string SpriteLayer = "57b6655c39d6eb85:PupupDisplay",
+				string SpriteSource = "54499a95108a484e:TextBox3",
+				bool RenderMask = false,
+				bool FlipX = false,
+				bool FlipY = false,
+				bool AnimationActive = true,
+				float AnimationSpeed = 1,
+				uint StartFrame = 0,
+			},
+			Reactive = 
+			{
+				bool Active = true,
+				bool CaptureMouse = false,
+			},
+			Button = 
+			{
+			},
+			Area = 
+			{
+				Vec2 Size = [2, 0.5],
+				Location Origin = Center,
+			},
+			ReloadLevel = 
+			{
+			},
+			Hierarchy = 
+			{
+				Cog = 
+				{
+					LinkId = 
+					{
+						uint Id = 5,
+					},
+					Named = 
+					{
+						string Name = "SpriteText",
+					},
+					Transform = 
+					{
+						Vec3 Translation = [0, 0.137505174, 0],
+						Vec3 Scale = [0.25, 0.25, 1],
+						Quat Rotation = [0, 0, 0, 1],
+					},
+					SpriteText = 
+					{
+						bool Visible = true,
+						bool VisibilityCulling = true,
+						bool VisibilityEvents = true,
+						bool CastShadows = false,
+						Vec4 Color = [1, 1, 1, 1],
+						BlendMode BlendMode = Alpha,
+						SpriteGeometryMode GeometryMode = ZPlane,
+						string SpriteLayer = "57b267c431c2bfd7:PopupDisplayDisplay",
+						string FontName = "4e7bac697bec55c5:Verdana",
+						uint FontSize = 54,
+						string Text = "RETRY",
+						TextAlign Align = Center,
+						float PixelsPerUnit = 64,
+						bool Smoothing = true,
+					},
+				},
+				Cog = 
+				{
+					LinkId = 
+					{
+						uint Id = 6,
+					},
+					Named = 
+					{
+						string Name = "Shadow",
+					},
+					Transform = 
+					{
+						Vec3 Translation = [-0.0500000007, -0.0500000007, 0],
+						Vec3 Scale = [1, 1, 1],
+						Quat Rotation = [0, 0, 0, 1],
+					},
+					Sprite = 
+					{
+						bool Visible = true,
+						bool VisibilityCulling = true,
+						bool VisibilityEvents = true,
+						bool CastShadows = false,
+						Vec4 Color = [0, 0, 0, 1],
+						BlendMode BlendMode = Alpha,
+						SpriteGeometryMode GeometryMode = ZPlane,
+						string SpriteLayer = "57b267ac3c72d547:PopupDisplayShadow",
+						string SpriteSource = "544a2f6a6b8b6c88:TextBox1",
+						bool RenderMask = false,
+						bool FlipX = false,
+						bool FlipY = false,
+						bool AnimationActive = true,
+						float AnimationSpeed = 1,
+						uint StartFrame = 0,
+					},
+					Area = 
+					{
+						Vec2 Size = [2, 0.5],
+						Location Origin = Center,
+					},
+					Hierarchy = 
+					{
+					},
+				},
+			},
+		},
+		Cog = 
+		{
+			LinkId = 
+			{
+				uint Id = 7,
+			},
+			Named = 
+			{
+				string Name = "LEVEL SELECT",
+			},
+			Transform = 
+			{
+				Vec3 Translation = [0, -0.949999988, 0],
+				Vec3 Scale = [1, 1, 1],
+				Quat Rotation = [0, 0, 0, 1],
+			},
+			Sprite = 
+			{
+				bool Visible = true,
+				bool VisibilityCulling = true,
+				bool VisibilityEvents = true,
+				bool CastShadows = false,
+				Vec4 Color = [1, 0.926549911, 0.435000002, 1],
+				BlendMode BlendMode = Alpha,
+				SpriteGeometryMode GeometryMode = ZPlane,
+				string SpriteLayer = "57b6655c39d6eb85:PupupDisplay",
+				string SpriteSource = "54499a95108a484e:TextBox3",
+				bool RenderMask = false,
+				bool FlipX = false,
+				bool FlipY = false,
+				bool AnimationActive = true,
+				float AnimationSpeed = 1,
+				uint StartFrame = 0,
+			},
+			Reactive = 
+			{
+				bool Active = true,
+				bool CaptureMouse = false,
+			},
+			Button = 
+			{
+			},
+			LevelChangeButton = 
+			{
+				string LevelChange = "57d4a476f86f8f51:LevelSelect",
+			},
+			Area = 
+			{
+				Vec2 Size = [2, 0.5],
+				Location Origin = Center,
+			},
+			Hierarchy = 
+			{
+				Cog = 
+				{
+					LinkId = 
+					{
+						uint Id = 8,
+					},
+					Named = 
+					{
+						string Name = "SpriteText",
+					},
+					Transform = 
+					{
+						Vec3 Translation = [0, 0.137505174, 0],
+						Vec3 Scale = [0.25, 0.25, 1],
+						Quat Rotation = [0, 0, 0, 1],
+					},
+					SpriteText = 
+					{
+						bool Visible = true,
+						bool VisibilityCulling = true,
+						bool VisibilityEvents = true,
+						bool CastShadows = false,
+						Vec4 Color = [1, 1, 1, 1],
+						BlendMode BlendMode = Alpha,
+						SpriteGeometryMode GeometryMode = ZPlane,
+						string SpriteLayer = "57b267c431c2bfd7:PopupDisplayDisplay",
+						string FontName = "4e7bac697bec55c5:Verdana",
+						uint FontSize = 54,
+						string Text = "QUIT",
+						TextAlign Align = Center,
+						float PixelsPerUnit = 64,
+						bool Smoothing = true,
+					},
+				},
+				Cog = 
+				{
+					LinkId = 
+					{
+						uint Id = 9,
+					},
+					Named = 
+					{
+						string Name = "Shadow",
+					},
+					Transform = 
+					{
+						Vec3 Translation = [-0.0500000007, -0.0500000007, 0],
+						Vec3 Scale = [1, 1, 1],
+						Quat Rotation = [0, 0, 0, 1],
+					},
+					Sprite = 
+					{
+						bool Visible = true,
+						bool VisibilityCulling = true,
+						bool VisibilityEvents = true,
+						bool CastShadows = false,
+						Vec4 Color = [0, 0, 0, 1],
+						BlendMode BlendMode = Alpha,
+						SpriteGeometryMode GeometryMode = ZPlane,
+						string SpriteLayer = "57b267ac3c72d547:PopupDisplayShadow",
+						string SpriteSource = "544a2f6a6b8b6c88:TextBox1",
+						bool RenderMask = false,
+						bool FlipX = false,
+						bool FlipY = false,
+						bool AnimationActive = true,
+						float AnimationSpeed = 1,
+						uint StartFrame = 0,
+					},
+					Area = 
+					{
+						Vec2 Size = [2, 0.5],
+						Location Origin = Center,
+					},
+					Hierarchy = 
+					{
+					},
+				},
+			},
+		},
+		Cog = 
+		{
+			LinkId = 
+			{
+				uint Id = 10,
+			},
+			Named = 
+			{
+				string Name = "Reason",
+			},
+			Transform = 
+			{
+				Vec3 Translation = [0, 0.435196221, 0],
+				Vec3 Scale = [1, 1, 1],
+				Quat Rotation = [0, 0, 0, 1],
+			},
+			Sprite = 
+			{
+				bool Visible = true,
+				bool VisibilityCulling = true,
+				bool VisibilityEvents = true,
+				bool CastShadows = false,
+				Vec4 Color = [0.850000024, 0.793092489, 0.412250012, 1],
+				BlendMode BlendMode = Alpha,
+				SpriteGeometryMode GeometryMode = ZPlane,
+				string SpriteLayer = "57b6655c39d6eb85:PupupDisplay",
+				string SpriteSource = "544a2f6a6b8b6c88:TextBox1",
+				bool RenderMask = false,
+				bool FlipX = false,
+				bool FlipY = false,
+				bool AnimationActive = true,
+				float AnimationSpeed = 1,
+				uint StartFrame = 0,
+			},
+			Area = 
+			{
+				Vec2 Size = [2, 0.5],
+				Location Origin = Center,
+			},
+			Hierarchy = 
+			{
+				Cog = 
+				{
+					LinkId = 
+					{
+						uint Id = 11,
+					},
+					Named = 
+					{
+						string Name = "Shadow",
+					},
+					Transform = 
+					{
+						Vec3 Translation = [-0.0500000007, -0.0500000007, 0],
+						Vec3 Scale = [1, 1, 1],
+						Quat Rotation = [0, 0, 0, 1],
+					},
+					Sprite = 
+					{
+						bool Visible = true,
+						bool VisibilityCulling = true,
+						bool VisibilityEvents = true,
+						bool CastShadows = false,
+						Vec4 Color = [0, 0, 0, 1],
+						BlendMode BlendMode = Alpha,
+						SpriteGeometryMode GeometryMode = ZPlane,
+						string SpriteLayer = "57b267ac3c72d547:PopupDisplayShadow",
+						string SpriteSource = "544a2f6a6b8b6c88:TextBox1",
+						bool RenderMask = false,
+						bool FlipX = false,
+						bool FlipY = false,
+						bool AnimationActive = true,
+						float AnimationSpeed = 1,
+						uint StartFrame = 0,
+					},
+					Area = 
+					{
+						Vec2 Size = [2, 0.5],
+						Location Origin = Center,
+					},
+					Hierarchy = 
+					{
+					},
+				},
+				Cog = 
+				{
+					LinkId = 
+					{
+						uint Id = 12,
+					},
+					Named = 
+					{
+						string Name = "SpriteText",
+					},
+					Transform = 
+					{
+						Vec3 Translation = [0, 0.120220125, -1.29030968e-06],
+						Vec3 Scale = [0.25, 0.25, 1],
+						Quat Rotation = [0, 0, 0, 1],
+					},
+					SpriteText = 
+					{
+						bool Visible = true,
+						bool VisibilityCulling = true,
+						bool VisibilityEvents = true,
+						bool CastShadows = false,
+						Vec4 Color = [1, 1, 1, 1],
+						BlendMode BlendMode = Alpha,
+						SpriteGeometryMode GeometryMode = ZPlane,
+						string SpriteLayer = "57b267c431c2bfd7:PopupDisplayDisplay",
+						string FontName = "4e7bac697bec55c5:Verdana",
+						uint FontSize = 50,
+						string Text = "RAN OUT OF TIME",
+						TextAlign Align = Center,
+						float PixelsPerUnit = 64,
+						bool Smoothing = true,
+					},
+				},
+			},
+		},
+	},
+},

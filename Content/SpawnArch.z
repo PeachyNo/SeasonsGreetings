@@ -1,0 +1,38 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    SpawnArch
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    6/15/2016
+Brief Description:
+  Spawn the set Archetype if clicked on
+*******************************************************************************/
+class SpawnArch : ZilchComponent
+{
+    // the archetype to spawn
+    [Property]
+    var Arch : Archetype;
+    [Dependency]
+    var Reactive : Reactive;
+    function Initialize(init : CogInitializer)
+    {
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Owner, Events.MouseUp, this.OnMouseUp);
+    }
+    
+    
+    function OnMouseUp(event : MouseEvent)
+    {
+        // if the archetype var is not equal to null
+        if(this.Arch != null)
+        {
+            // spawn teh archetype
+            this.Space.CreateAtPosition(this.Arch, Real3(this.Owner.Transform.Translation.X, this.Owner.Transform.Translation.Y, 10.0));
+        }
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+    }
+}

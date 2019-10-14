@@ -1,0 +1,76 @@
+Cog = 
+{
+	LinkId = 
+	{
+		uint Id = 1,
+	},
+	Named = 
+	{
+		string Name = "PointBar",
+	},
+	Archetyped = 
+	{
+		string Name = "578e21c26d53f643:OrderStarPoints",
+	},
+	Transform = 
+	{
+		Vec3 Translation = [-10.5262127, 5.50629473, 0],
+		Vec3 Scale = [1, 1, 1],
+		Quat Rotation = [0, 0, 0, 1],
+	},
+	Sprite = 
+	{
+		bool Visible = true,
+		bool VisibilityCulling = true,
+		bool VisibilityEvents = true,
+		bool CastShadows = false,
+		Vec4 Color = [1, 1, 0, 1],
+		BlendMode BlendMode = Alpha,
+		SpriteGeometryMode GeometryMode = ZPlane,
+		string SpriteLayer = "57d4a9831891a58b:DISPLAY",
+		string SpriteSource = "544a2f6a6b8b6c88:TextBox1",
+		bool RenderMask = false,
+		bool FlipX = true,
+		bool FlipY = false,
+		bool AnimationActive = true,
+		float AnimationSpeed = 1,
+		uint StartFrame = 0,
+	},
+	Area = 
+	{
+		Vec2 Size = [14, 0.300000012],
+		Location Origin = BottomLeft,
+	},
+	PointBar = 
+	{
+	},
+	Reactive = 
+	{
+		bool Active = true,
+		bool CaptureMouse = false,
+	},
+	OrderStarPoints = 
+	{
+		float MinSize = 0.300000012,
+		float EaseTime = 0.0479788482,
+		Enum EaseType = QuadIn,
+		CogPath BoardPath = 
+		{
+			string Path = ":/GridSpace/Board",
+			bool ErrorOnResolveToNull = false,
+			bool ErrorOnPathCantCompute = false,
+			bool ErrorOnDirectLinkFail = false,
+			bool UpdateCogOnPathChange = true,
+			bool UpdatePathOnCogChange = true,
+			bool UpdateCogOnInitialize = true,
+			bool ResolvedNullErrorOccurred = false,
+			uint ResolvedCog = 2,
+			CogPathPreference PathPreference0 = CogRelative,
+			CogPathPreference PathPreference1 = SpaceRelative,
+			CogPathPreference PathPreference2 = Absolute,
+		},
+		string StarArc = "57bcd5bd53251f6e:Star",
+		string DataName = "G2L1",
+		string DataArc = "5789874bde8754e4:StarData",
+	},
+},

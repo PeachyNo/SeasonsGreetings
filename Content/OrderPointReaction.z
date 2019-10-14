@@ -1,0 +1,63 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    OrderPointReaction
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    6/15/2016
+Brief Description:
+  this wil spawn in a archetype and send a sound event when the player
+  goes  in order of the seasons
+*******************************************************************************/
+class OrderPointReaction : ZilchComponent
+{
+     // particle it spawns in when it changes
+    [Property]
+    var ParticleArchetype : Archetype = Archetype.MultiGain;
+    
+    // sound to play
+    [Property]
+    var SoundCue : SoundCue;
+    
+    // the volume it will be
+    [Property]
+    var Volume : Real = 1;
+    
+    // the pitch the sound will be
+    [Property]
+    var Pitch : Real;
+    var SeasonNum : Integer = 4;
+    
+    function Initialize(init : CogInitializer)
+    {
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Space, Events.IncreaseMultiplierEvent, this.OnMultiGained);
+    }
+    
+    function OnMultiGained(event : IncreaseMultiplierEvent)
+    {
+        // if the player goes out of order reset it
+        if(event.Multiplier == 1)
+        {
+            return;
+        }
+        // if they go in order 
+        else
+        {
+            if(this.SeasonNum == 4)
+            {
+                this.SeasonNum = 0;
+            }
+            // if the reach the end of th seasons
+            if(this.SeasonNum == 0)
+            {
+                // create the particle
+                this.Space.CreateAtPosition(this.ParticleArchetype, this.Owner.Transform.Translation + Real3(0.0, 0.0, 1.0));
+                // send the souund event
+                this.Space.DispatchEvent(Events.PlaySoundEvent, PlaySoundEvent(this.SoundCue, this.Pitch, this.Volume));
+            }
+            ++this.SeasonNum;
+            
+        }
+    }
+}

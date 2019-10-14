@@ -1,0 +1,110 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    Tile
+author      Alex Nash
+course      GAM100
+Project     Seasons Greetings
+due date    5/13/2019
+Brief Description:
+  This will display the timer
+*******************************************************************************/
+class Tile : ZilchComponent
+{
+    [Dependency]
+    var Reactive: Reactive;
+    var Count : Integer;
+    
+    var Processed : Boolean = false;
+    var Type : Integer;
+    var TileX : Integer;
+    var TileY : Integer;
+    var Queue : Array[Tile] = new Array[Tile]();
+    var Board : TheBoard;
+    [Property]
+    var Cleared : Integer = 5;
+    [Property] 
+    var BlockDestroy : Integer = 10;
+    var PrevTile : Integer;
+    var Arc : Archetype = null;
+    var RandomGenerator : Random = Random();
+    
+    function Initialize(init : CogInitializer)
+    {
+        this.Owner.Sprite.Visible = false;
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Owner, Events.MouseUp, this.OnMouseUp);
+    }
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        if(this.Owner.Transform.Translation.Y <= this.Board.Owner.Transform.Translation.Y + this.Board.BoardAdjustmentY)
+        {
+            this.Owner.Sprite.Visible = true;
+        } 
+    }
+    function AddTileIfValidAndNotProcessed(tileY : Integer, tileX: Integer, queue : Array[Tile])
+    {
+        if(this.Board.OnBoard(tileY, tileX))
+        {
+            if(!this.Board.Board[tileY][tileX].Processed)
+            {
+                this.Queue.Add(this.Board.Board[tileY][tileX]);
+                //this.Board.Board[tileY][tileX].Owner.Sprite.Color = Real4(0,0,0,1);
+            }
+        }
+    }
+    
+    function FloodFill(tileType : Integer, board : TheBoard, checkX : Integer, checkY : Integer)
+    {
+        var check : Tile = this;
+        /* Makes sure floodfill is not out of bounds. */
+        this.Queue.Add(this.Board.Board[checkY][checkX]);
+        /* We want to know how may tiles we found so we can see if it is above the minimum amount of required tiles. */
+        //Console.DumpValue(check);
+        while(this.Queue.Count != 0)
+        {
+            check = this.Queue[0];
+            this.Queue.RemoveAt(0);
+            //Console.DumpValue(check);
+            if(check != null && check.Type == tileType)
+            {
+                ++this.Count;
+                this.Board.Board[check.TileY][check.TileX].Type = this.Cleared;
+                this.Board.Board[check.TileY][check.TileX].Processed = true;
+                
+                //Console.DumpValue(this.Board.Board[check.TileY][check.TileX]);
+                /* North */
+                this.AddTileIfValidAndNotProcessed(check.TileY+1,check.TileX,this.Queue);
+                /* West */
+                this.AddTileIfValidAndNotProcessed(check.TileY,check.TileX-1,this.Queue);
+                /* South */
+                this.AddTileIfValidAndNotProcessed(check.TileY-1,check.TileX,this.Queue);
+                /* East */
+                this.AddTileIfValidAndNotProcessed(check.TileY,check.TileX+1,this.Queue);
+                
+            }
+            
+        }
+    } 
+    
+    
+    
+    
+    function OnMouseUp(event : MouseEvent)
+    {
+        var typeStorage = this.Type;
+        if(this.Board.DestroyActive == true)
+        {
+            this.Board.TileDestroy(typeStorage);
+            this.Board.BoardCheck(typeStorage, this.BlockDestroy);
+            this.Board.DestroyActive = false;
+        }
+        else if(this.Type <= 4)
+        {
+            this.FloodFill(this.Type, this.Board, this.TileX, this.TileY);
+            this.Board.BoardCheck(typeStorage, this.Count);
+            this.Count = 0;
+        }
+        // Debug Used to make sure the tile you clicked on is the correct type.
+        //Console.DumpValue(typeStorage);
+    }
+}

@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "StarPoints",
+		uint64 ResourceId = 5788512b05a506bc,
+	},
+},

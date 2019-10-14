@@ -1,0 +1,59 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    ListenShuffleFreeze
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    6/15/2016
+Brief Description:
+  this will turn off reactive if it hears the shuffle event then turn it back 
+  oback on after the set time
+*******************************************************************************/
+class ListenShuffleFreeze : ZilchComponent
+{
+    [Dependency]
+    var Reactive : Reactive;
+    
+    // time how long its off
+    var Timer : Real = 0.0;
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.FreezeShuffle, this.OnFreezeShuffle);
+    }
+    
+    function OnFreezeShuffle(event : FreezeShuffle)
+    {
+        // set the timer
+        this.Timer = event.Time;
+        // turn off
+        this.Reactive.Active = false;
+        
+        // start the timer
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    }
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        // if the timer has not run out
+        if(this.Timer > 0.0)
+        {
+            // subtract from the timer
+            this.Timer -= event.Dt;
+            // check if it has run out
+            if(this.Timer <= 0.0)
+            {
+                // if so turn reactive back on and disconnect from logic update
+                this.Reactive.Active = true;
+                Zero.Disconnect(this.Owner, Events.LogicUpdate, this);
+            }
+        }
+        else
+        {
+            // if it has run out of tiime turn reactive back on and disconnect from logic update
+            this.Reactive.Active = true;
+            Zero.Disconnect(this.Owner, Events.LogicUpdate, this);
+        }
+        
+    }
+}

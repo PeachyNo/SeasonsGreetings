@@ -1,0 +1,32 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    TimeShow
+author      Alex Nash
+course      GAM100
+Project     Seasons Greetings
+due date    5/13/2019
+Brief Description:
+  When 
+  
+*******************************************************************************/
+class TimeShow : ZilchComponent
+{
+    var OnlyOnce : Boolean = false;
+    function Initialize(init : CogInitializer)
+    {
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        this.Owner.SpriteText.Text = "+5";
+        if(this.OnlyOnce == false)
+        {
+            var moveSeq = Action.Group(this.Owner.Actions);
+            Action.Property(moveSeq, @this.Owner.Transform.Translation,
+                Real3(this.Owner.Transform.Translation.X, this.Owner.Transform.Translation.Y + 10.0, 0.0),
+                5, Ease.QuadInOut);
+            this.OnlyOnce = true;
+        }
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+    }
+}

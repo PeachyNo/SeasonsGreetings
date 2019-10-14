@@ -1,0 +1,15 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "SoundListen",
+		uint64 ResourceId = 57afa9a6c13acec0,
+	},
+	ContentTags = 
+	{
+		Array Tags = 
+		[
+			"Sound",
+		],
+	},
+},

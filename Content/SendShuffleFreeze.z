@@ -1,0 +1,46 @@
+/**********************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    SendShuffleFreeze
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    6/15/2016
+Brief Description:
+  this send the shuffle event if clicked on to turn off reactive for a short time
+**********************************************************************************/
+class SendShuffleFreeze : ZilchComponent
+{
+    [Dependency]
+    var Reactive : Reactive;
+    
+    // how long the shuffle should take
+    [Property]
+    var Time : Real = 0.4;
+    
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Owner, Events.MouseUp, this.OnMouseUp);
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    }
+    
+    function OnMouseUp(event : MouseEvent)
+    {
+        // if clicked on send the event
+        this.Space.DispatchEvent(Events.FreezeShuffle, FreezeShuffle(this.Time));
+    }
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+    }
+}
+
+class FreezeShuffle : ZilchEvent
+{
+    var Time : Real = 0.4;
+    constructor(time : Real) : base()
+    {
+        this.Time = time;
+    }
+    sends FreezeShuffle : FreezeShuffle;
+}

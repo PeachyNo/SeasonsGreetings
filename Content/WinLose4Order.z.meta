@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "WinLose4Order",
+		uint64 ResourceId = 578457b3e7a65299,
+	},
+},

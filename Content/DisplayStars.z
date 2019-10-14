@@ -1,0 +1,67 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    DisplayStars
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    6/15/2016
+Brief Description:
+  this displays the earned stars on the level select menu
+*******************************************************************************/
+class DisplayStars : ZilchComponent
+{
+    // these are the stars that it will use to deminstrat if the player earned them
+    [Property]
+    var Star1Path : CogPath;
+    [Property]
+    var Star2Path : CogPath;
+    [Property]
+    var Star3Path : CogPath;
+    
+    // the data archetype
+    [Property]
+    var DataArc : Archetype;
+    
+    // the name of the data
+    [Property]
+    var DataString : String = "Data";
+    
+    
+    var Star1 : Cog;
+    var Star2 : Cog;
+    var Star3 : Cog;
+    
+    var DataCog : Cog;
+    
+    function Initialize(init : CogInitializer)
+    {
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        this.DataCog = Zero.ObjectStore.RestoreOrArchetype(this.DataString, this.DataArc, this.Space);
+        
+        
+        this.Star1 = this.Star1Path.Cog;
+        this.Star2 = this.Star2Path.Cog;
+        this.Star3 = this.Star3Path.Cog;
+        
+        this.Star1.Sprite.Visible = false;
+        this.Star2.Sprite.Visible = false;
+        this.Star3.Sprite.Visible = false;
+        //if the data says the player has earned the stars it will make them visible
+        if(this.DataCog.StarData.Stars >= 1)
+        {
+            this.Star2.Sprite.Visible = true;
+            if(this.DataCog.StarData.Stars >= 2)
+            {
+                this.Star1.Sprite.Visible = true;
+                if(this.DataCog.StarData.Stars == 3)
+                {
+                    this.Star3.Sprite.Visible = true;
+                }
+            }
+        }
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+    }
+}

@@ -1,0 +1,46 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    PausingReactive
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    6/15/2016
+Brief Description:
+  seds the event to stop reactive
+*******************************************************************************/
+class PausingReactive : ZilchComponent
+{
+    [Dependency]
+    var Reactive : Reactive;
+    
+    // if it pauses or plays
+    [Property]
+    var PauseOrPlay : Boolean  = true;
+    
+    function Initialize(init : CogInitializer)
+    {
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Owner, Events.MouseUp, this.OnMouseUp);
+    }
+    
+    function OnMouseUp(event : MouseEvent)
+    {
+        // send te pause or play event
+        this.Space.DispatchEvent(Events.PausePlayEvent, PausePlayEvent(this.PauseOrPlay));
+    }
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+    }
+}
+
+class PausePlayEvent : ZilchEvent
+{
+    var Condition : Boolean = true;
+    constructor(condition : Boolean) : base()
+    {
+        
+        this.Condition = condition;
+    }
+    sends PausePlayEvent : PausePlayEvent;
+}

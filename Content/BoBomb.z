@@ -1,0 +1,56 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    BoBomb
+author      Alex Nash
+course      GAM100
+Project     Seasons Greetings
+due date    5/13/2019
+Brief Description:
+  Destorys all tiles with in a two tile radius of the bomb.
+*******************************************************************************/
+class BoBomb : ZilchComponent
+{
+    [Dependency]
+    var Reactive: Reactive;
+    /* This is used to make the player only needs one of a special tile too use it. */
+    var OneIsEnough : Integer = 3;
+    var Tile : Tile;
+    var Board : TheBoard;
+    [Property]
+    var BoardCogPath : CogPath;
+    /* This will hold the position of each tile that will be hit by the bomb. */
+    var Offsets : Array[Integer2] = new Array[Integer2]();
+    function Initialize(init : CogInitializer)
+    {
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Owner, Events.MouseUp, this.OnMouseUp);
+        /* Getting access to the board and tile. */
+        this.Board = this.Space.FindObjectByName("Board").TheBoard;
+        this.Tile = this.Owner.Tile;
+        /* This Sets up each tile the bomb will hit when it is clicked. */
+        this.Offsets.Push(Integer2(0,0));
+        this.Offsets.Push(Integer2(0,2));
+        this.Offsets.Push(Integer2(0,1));
+        this.Offsets.Push(Integer2(2,0));
+        this.Offsets.Push(Integer2(1,0));
+        this.Offsets.Push(Integer2(1,1));
+        this.Offsets.Push(Integer2(-1,1));
+        this.Offsets.Push(Integer2(0,-2));
+        this.Offsets.Push(Integer2(0,-1));
+        this.Offsets.Push(Integer2(1,-1));
+        this.Offsets.Push(Integer2(-2,0));
+        this.Offsets.Push(Integer2(-1,0));
+        this.Offsets.Push(Integer2(-1,-1));
+    }
+    function OnMouseUp(event : MouseEvent)
+    {
+        foreach(var offset in this.Offsets)
+        {
+            if(this.Board.OnBoard(this.Tile.TileY + offset.Y, this.Tile.TileX + offset.X))
+            {
+                this.Board.Board[this.Tile.TileY + offset.Y][this.Tile.TileX + offset.X].Type = this.Board.Cleared;
+            }
+        }
+        this.Board.BoardCheck(this.Tile.Type, this.OneIsEnough);
+    }
+}

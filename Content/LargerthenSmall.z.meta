@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "LargerthenSmall",
+		uint64 ResourceId = 57d4b7582b18301f,
+	},
+},

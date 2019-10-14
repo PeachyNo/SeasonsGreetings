@@ -1,0 +1,32 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    Rotate
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    5/13/2019
+Brief Description:
+  this will rotate the owner
+*******************************************************************************/
+class Rotate : ZilchComponent
+{
+    // how muuch it will turn every logic update
+    [Property]
+    var Speed : Real;
+    
+    [Dependency]
+    var Transform : Transform;
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        
+    }
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        //This will ajust the angle of the owner every logic update
+        this.Owner.Transform.RotateAnglesLocal(Real3(0,0,Math.ToRadians(this.Speed * event.Dt)));
+        
+    }
+}

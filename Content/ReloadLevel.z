@@ -1,0 +1,31 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    LevelChangeButton
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    5/13/2019
+Brief Description:
+  this will reload the level when the owner is clicked on
+*******************************************************************************/
+class ReloadLevel : ZilchComponent
+{
+    [Dependency]
+    var Reactive : Reactive;
+    
+    function Initialize(init : CogInitializer)
+    {
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Owner, Events.MouseUp, this.OnMouseUp);
+        
+    }
+    //when clicked on, it will reload the level
+    function OnMouseUp(event : MouseEvent)
+    {
+        this.Space.LoadLevel(this.Space.CurrentLevel);
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+    }
+}

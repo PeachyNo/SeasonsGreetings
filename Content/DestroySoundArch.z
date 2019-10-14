@@ -1,0 +1,31 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    DestroySoundArch
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    5/13/2016
+Brief Description:
+  This will destroy a spawned in sound Archetype after it is done playing
+*******************************************************************************/
+class DestroySoundArch : ZilchComponent
+{
+    //make sure it is actually playing a sound
+    [Dependency]
+    var Sound : SimpleSound;
+    
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        // if it is not playing, destroy it
+        if(this.Sound.IsPlaying() == false)
+        {
+            this.Owner.Destroy();
+        }
+    }
+}

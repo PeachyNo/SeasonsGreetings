@@ -1,0 +1,157 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    StarPoints
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    6/15/2016
+Brief Description:
+  
+*******************************************************************************/
+class StarPoints : ZilchComponent
+{
+    // this is for the function to make the bar grow
+    [Dependency]
+    var PointBar : PointBar;
+    // how many times the player needs to go through the seasons to get all of the stars
+    [Property]
+    var Score : Integer = 100;
+    // the maximum size of the bar
+    [Property]
+    var MaxSize : Real = 50;
+    // How many points that are gained when the  plaer goes in order
+    [Property]
+    var PointsGained : Integer = 1;
+    // how quickly the bar will grow
+    [Property]
+    var EaseTime : Real = 1.0;
+    // How the bar will grow
+    [Property]
+    var EaseType : Ease = Ease.QuadIn;
+    // the stars it pawns in
+    [Property]
+    var StarArc : Archetype = Archetype.Star;
+    // the name oof the data that will be saved
+    [Property]
+    var DataName : String = "Data";
+    // the data archetype
+    [Property]
+    var DataArc : Archetype;
+    //keep track of the data
+    var DataCog : Cog;
+    
+    var Points : Integer = 0;
+    // keep track of the stars
+    var Star1 : Cog;
+    var Star2 : Cog;
+    var Star3 : Cog;
+    // the stars on the win screen
+    var Star1Win : Cog;
+    var Star2Win : Cog;
+    var Star3Win : Cog;
+    
+    var Tracker : Integer = 1;
+    // the values tat the player needs to get to to get the stars
+    var Star1Val : Integer = 0;
+    var Star2Val : Integer = 0;
+    var Star3Val : Integer = 0;
+    
+    function Initialize(init : CogInitializer)
+    {
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Space, Events.IncreaseMultiplierEvent, this.OnMultiGained);
+        Zero.Connect(this.Space, Events.WinLoseEvent, this.OnWinLoseEvent);
+        
+        // set the star values to half, three fourths, and whole of the score
+        this.Star1Val = this.Score/2;
+        this.Star2Val = (this.Score*3)/4;
+        this.Star3Val = this.Score;
+        
+        // find and set the stars on the win screen
+        this.Star1Win = this.Space.FindObjectByName("YellowStar1");
+        this.Star2Win = this.Space.FindObjectByName("YellowStar2");
+        this.Star3Win = this.Space.FindObjectByName("YellowStar3");
+        
+        // spawn in each star and set them to invisable
+        this.Star1 = this.Space.CreateAtPosition(this.StarArc, Real3(
+            this.Owner.Transform.Translation.X + ((this.MaxSize/this.Score)*this.Star1Val),
+            this.Owner.Transform.Translation.Y + 1.25, this.Owner.Transform.Translation.Z));
+        this.Star1.Sprite.Visible = false;
+        
+        this.Star2 = this.Space.CreateAtPosition(this.StarArc, Real3(
+            this.Owner.Transform.Translation.X + ((this.MaxSize/this.Score)*this.Star2Val),
+            this.Owner.Transform.Translation.Y + 1.25, this.Owner.Transform.Translation.Z));
+        this.Star2.Sprite.Visible = false;
+        
+        this.Star3 = this.Space.CreateAtPosition(this.StarArc, Real3(
+            this.Owner.Transform.Translation.X + ((this.MaxSize/this.Score)*this.Star3Val),
+            this.Owner.Transform.Translation.Y + 1.25, this.Owner.Transform.Translation.Z));
+        this.Star3.Sprite.Visible = false;
+        
+        // create or find the star data
+        this.DataCog = Zero.ObjectStore.RestoreOrArchetype(this.DataName, this.DataArc, this.Space);
+    }
+    
+    function OnWinLoseEvent(event : WinLoseEvent)
+    {
+        // if the player wins save the star data
+        if(true == event.DidWin)
+        {
+            Zero.ObjectStore.Store(this.DataName, this.DataCog);
+        }
+    }
+    
+    function OnMultiGained(event : IncreaseMultiplierEvent)
+    {
+        // if the player gos in order
+        if(event.Multiplier > 1)
+        {
+            // f they have gone through the seasons
+            if(this.Tracker == 1)
+            {
+                // make the bar go up
+                this.PointBar.GrowX(this.Score, this.MaxSize, 
+                    this.PointsGained, this.EaseTime, this.EaseType);
+                ++this.Points;
+                this.Tracker = 4;
+            }
+            else
+            {
+                // if not make it get closer
+                --this.Tracker;
+            }
+        }
+        // if not reset the thing tracking the season order
+        else
+        {
+            
+            this.Tracker = 1;
+        }
+        // if the playe reaches the needed score to get the star
+        // give them the star and make it visible
+        if(this.Points >= this.Star1Val && this.DataCog.StarData.Stars != 1)
+        {
+            this.Star1.Sprite.Visible = true;
+            this.Star1Win.Sprite.Visible = true;
+            this.DataCog.StarData.Stars = 1;
+        }
+        if(this.Points >= this.Star2Val && this.DataCog.StarData.Stars != 2)
+        {
+            this.Star2.Sprite.Visible = true;
+            this.Star2Win.Sprite.Visible = true;
+            this.DataCog.StarData.Stars = 2;
+        }
+        if(this.Points >= this.Star3Val && this.DataCog.StarData.Stars != 3)
+        {
+            this.Star3.Sprite.Visible = true;
+            this.Star3Win.Sprite.Visible = true;
+            this.DataCog.StarData.Stars = 3;
+        }
+        
+        
+    }
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+    }
+}

@@ -1,0 +1,55 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    ChangeSeason
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    5/13/2016
+Brief Description:
+  This reseves the change season events and turns on the 
+  apropriate season change
+*******************************************************************************/
+class ChangeSeason : ZilchComponent
+{
+    //the is set to which ever season it needs to be
+    [Property]
+    var ObjectSeason : Integer = 1;
+    
+    
+    function Initialize(init : CogInitializer)
+    {
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        
+        // connect to the on change event
+        Zero.Connect(this.Space, Events.ChangeSeasonsEvent, this.OnChangeSeason);
+    }
+    
+    // this function changes the seasons acordingly  when th season change is sent
+    function OnChangeSeason(event : ChangeSeasonsEvent)
+    {
+        // checks if the its the correct season
+        if(event.Season == this.ObjectSeason)
+        {
+            // if so turnn on the particle system
+            if(this.Owner.BoxParticleEmitter != null)
+            {
+                this.Owner.BoxParticleEmitter.Active = true;
+            }
+        }
+        // if not turn off the particle system
+        else
+        {
+            if(this.Owner.BoxParticleEmitter != null)
+            {
+                this.Owner.BoxParticleEmitter.Active = false;
+            }
+        }
+        
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+    }
+}
+
+

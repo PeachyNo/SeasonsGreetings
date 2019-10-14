@@ -1,0 +1,47 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    PauseSound
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    6/15/2016
+Brief Description:
+  pauses the sound for the object it is attatched to
+*******************************************************************************/
+class PauseSound : ZilchComponent
+{
+    
+    [Dependency]
+    var SimpleSound : SimpleSound;
+    
+    function Initialize(init : CogInitializer)
+    {
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Space, Events.PausePlayEvent, this.OnEventPause);
+        Zero.Connect(this.Space, Events.WinLoseEvent, this.OnWinEvent);
+    }
+    
+    function OnWinEvent(event : WinLoseEvent)
+    {
+        // if the play wins or loses stop the sound
+        this.SimpleSound.Stop();
+    }
+    
+    function OnEventPause(event : PausePlayEvent)
+    {
+        // if paused stop the sound
+        if(event.Condition == false)
+        {
+            this.SimpleSound.Stop();
+        }
+        // if played play the sound
+        else
+        {
+            this.SimpleSound.Play();
+        }
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+    }
+}

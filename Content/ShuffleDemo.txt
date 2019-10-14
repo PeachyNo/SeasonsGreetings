@@ -1,0 +1,4 @@
+When activated, it
+will shuffle all of
+the tiles on the board
+to different positions

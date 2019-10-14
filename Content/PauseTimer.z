@@ -1,0 +1,32 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    PauseTimer
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    6/15/2016
+Brief Description:
+  Pause the timer when needed
+*******************************************************************************/
+class PauseTimer : ZilchComponent
+{
+    [Dependency]
+    var Timer : Timer;
+    
+    function Initialize(init : CogInitializer)
+    {
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Space, Events.PausePlayEvent, this.OnWinEventPause);
+    }
+    
+    
+    function OnWinEventPause(event : PausePlayEvent)
+    {
+        // iif paused stop the sound
+        this.Timer.Running = event.Condition;
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+    }
+}

@@ -1,0 +1,73 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    TileSounds
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    5/13/2019
+Brief Description:
+  Play the selected sound when the owner is clicked on
+*******************************************************************************/
+class PlaySounds : ZilchComponent
+{
+    /* This chooses a sound it spawns */
+    [Property]
+    var Sound : SoundCue;
+    
+    [Property]
+    var Pitch : Real = 0.0;
+    
+    [Property]
+    var Volume : Real = 1.0;
+    
+    var SeasonCheck : Integer = 0;
+    
+    var Previous : Integer = 0;
+    
+    
+    function Initialize(init : CogInitializer)
+    {
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        //Zero.Connect(this.Owner, Events.MouseDown, this.OnMouseDown);
+        //Zero.Connect(this.Space, Events.PointsGainedEvent, this.OnPointsGained);
+        //Zero.Connect(this.Space, Events.IncreaseMultiplierEvent, this.OnMultiGained);
+        Zero.Connect(this.Space, Events.ChangeSeasonsEvent, this.OnChangeSeason);
+    }
+
+    /*function OnLogicUpdate(event : UpdateEvent)
+    {
+    }*/
+    
+    /*function OnMultiGained(event : IncreaseMultiplierEvent)
+    {
+        //event.Multiplier
+        
+    }*/
+    
+    /* when the mouse enters */
+    function OnChangeSeason(event : ChangeSeasonsEvent)
+    {
+        
+        this.SeasonCheck = event.Season;
+        
+        if(((this.SeasonCheck - 1) == this.Previous) || ((this.SeasonCheck == 1) && (this.Previous == 4)))
+        {
+            if(this.Pitch < 2)
+            {
+                this.Pitch += 0.5;
+            }
+        }
+        else
+        {
+            this.Pitch = 0;
+        }
+        
+        /* and plays a sound */
+        if(this.Sound != null)
+        {
+            this.Space.DispatchEvent(Events.PlaySoundEvent, PlaySoundEvent(this.Sound, this.Pitch, this.Volume));
+        }
+        
+        this.Previous = this.SeasonCheck;
+    }
+}

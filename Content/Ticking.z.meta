@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "Ticking",
+		uint64 ResourceId = 57bf9c3d48f0eecf,
+	},
+},

@@ -1,0 +1,11 @@
+AudioContent = 
+{
+	SoundBuilder = 
+	{
+		string Name = "StartSelect,UI,set93,talking tones,bright percussion,playful,toonish,light ambience,select",
+		uint64 ResourceId = 578795f8b2e23859,
+		bool Compressed = false,
+		uint Quality = 100,
+		SoundLoadType LoadType = Decompress,
+	},
+},

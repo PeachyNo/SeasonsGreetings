@@ -1,0 +1,273 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    TheBoard
+author      Alex Nash
+course      GAM100
+Project     Seasons Greetings
+due date    5/13/2019
+Brief Description:
+  This will display the timer
+*******************************************************************************/
+enum TileNumber {Spring = 1, Summer, Fall, Winter, Bomb = 6, Shuffle, Destory, Time, Coin}
+
+class TheBoard : ZilchComponent
+{
+    [Property]
+    var GameType : Integer = 1;
+    
+    /* This is the number we will use to determine if a block should be removed */
+    [Property]
+    var Cleared : Integer = 5;
+    var Board : Array[Array[Tile]] = new Array[Array[Tile]]();
+    /* This is for destory all of a certain tile function. So the game knows when i click on the next tile,
+        All of the same tiles will be deleted. */
+    [Property]
+    var DestroyActive : Boolean = false;
+    /* These two are used to offset the board make it easier to position. */
+    [Property]
+    var BoardAdjustmentX : Integer = 7;
+    [Property]
+    var BoardAdjustmentY : Integer = 5;
+    [Property]
+    var ParticleArc : Archetype;
+    
+    
+    /* This is to hold the tile that will be spawned in each position. */
+    var Arc : Archetype = null;
+    /* This is the required number of tiles for the players selection to be destroyed and reward points. */
+    [Property]
+    var RequiredTileNumber : Integer = 3;
+    
+    var RandomGenerator : Random = Random();
+    var Tile : Integer;
+    [Property]
+    var BoardsizeX : Integer = 14;
+    [Property]
+    var BoardsizeY : Integer = 10;
+    var TileFalling : TileFalling;
+    
+    function Initialize(init : CogInitializer)
+    {
+        for(var y = 0; y < this.BoardsizeY; ++y)
+        {   
+            var row : Array[Tile] = new Array[Tile](this.BoardsizeX);
+            this.Board.Add(row);
+            for(var x = 0; x < this.BoardsizeX; ++x)
+            {
+                var tile = this.TileSpawn(x,y);
+                row[x] = tile.Tile;
+                // Debug that gives us the tile positions
+                //Console.WriteLine("TileX: `tile.Tile.TileX` TileY: `tile.Tile.TileY`");
+                //Console.DumpValue(tile.Transform.Translation);
+            }
+        }
+    }
+    /* This is primarily to shorten code elsewhere. */
+    function GivePos(tileX : Real, tileY : Real) : Real3
+    {
+        return this.Owner.Transform.Translation + 
+            Real3(tileX-(this.BoardAdjustmentX), tileY-(this.BoardAdjustmentY),0.0);
+    }
+    /* Determines if a Y or X is on the board. 
+        We don't want to accidently try and access something that doesn't exist */ 
+    function OnBoard(tiley : Integer, tilex : Integer) : Boolean
+    {
+        return !((tilex >= this.BoardsizeX || tilex < 0) || (tiley >= this.BoardsizeY || tiley < 0));
+    }
+    
+    /* This, when called, will spawn a random tile when given a X,Y coordinate on the board. */
+    function TileSpawn(tileX : Integer, tileY : Integer) : Cog
+    {
+        /* All special tiles have their type above 5. While the main 4 tiles are 1-4. 
+            Just remeber Spring is 1, Winter is 4, and the seasons are in order. */
+        var tile : Integer = 0;
+        if(this.RandomGenerator.Probability(0.0075 * this.GameType))
+        {
+            tile = TileNumber.Bomb;
+            this.Arc = Archetype.Bomb;
+        }
+        else if(this.RandomGenerator.Probability(0.0067))
+        {
+            tile = TileNumber.Shuffle;
+            this.Arc = Archetype.Shuffle;
+        }
+        else if(this.RandomGenerator.Probability(0.003))
+        {
+            tile = TileNumber.Destory;
+            this.Arc = Archetype.Destroy;
+        }
+        else if(this.RandomGenerator.Probability(0.005 * this.GameType))
+        {
+            tile = TileNumber.Time;
+            this.Arc = Archetype.Time;
+        }/*
+        else if(this.RandomGenerator.Probability(0.005))
+        {
+            tile = TileNumber.Coin;
+            this.Arc = Archetype.Coin;
+        }*/
+        else
+        {
+            tile = this.RandomGenerator.DieRoll(4);
+            
+            if(tile  == TileNumber.Spring)
+            {
+                this.Arc = Archetype.Spring;
+            }
+            else if(tile  == TileNumber.Summer)
+            {
+                this.Arc = Archetype.Summer;
+            }
+            else if(tile  == TileNumber.Fall)
+            {
+                this.Arc = Archetype.Fall;
+            }
+            else if(tile  == TileNumber.Winter)
+            {
+                this.Arc = Archetype.Winter;
+            }
+        }
+        var createdtile = this.Space.CreateAtPosition(this.Arc, this.GivePos(tileX,tileY));
+        /* Making sure each tile knows it's type and position on the board. */
+        createdtile.Tile.Type = tile;
+        createdtile.Tile.TileX = tileX;
+        createdtile.Tile.TileY = tileY;
+        /* Giving tiles access to the board. */
+        createdtile.Tile.Board = this;
+        
+        return createdtile;
+    }
+    /* This puts all tiles that where put into new places on the board by the shuffling script,
+        into their new correct postitions in the board. */
+    function Shuffle()
+    {
+        var moveSeq = Action.Group(this.Owner.Actions);
+        for(var y = 0; y < this.BoardsizeY; ++y)
+        {   
+            for(var x = 0; x < this.BoardsizeX; ++x)
+            {
+                    if(this.Board[y][x] == null)
+                        continue;
+                        
+                    Action.Property(moveSeq, @this.Board[y][x].Owner.Transform.Translation,
+                    this.GivePos(x,y), 0.4, Ease.QuadInOut);
+                    this.Board[y][x].TileX = x;
+                    this.Board[y][x].TileY = y;
+            }
+        }
+    }
+    /* This is the matching system that finds all the tiles that are supposed to be cleared
+        and removes them if their are enough to be considered a match.
+        It also rewards the player points for complete matches */
+    function BoardCheck(prevTile : Integer, count : Integer)
+    {
+        var moveSeq = Action.Group(this.Owner.Actions);
+        var typeCount = Array[Integer](20);
+        
+        foreach(var row in this.Board){
+            foreach(var element in row){
+                ++typeCount[element.Type];
+            }
+        }
+            
+        for(var y = 0; y < this.BoardsizeY; ++y)
+        {
+            for(var x = 0; x < this.BoardsizeX; ++x)
+            {
+                if(this.Board[y][x] != null && this.Board[y][x].Type == this.Cleared)
+                {
+                    if(count >= this.RequiredTileNumber)
+                    {
+                        
+                        this.Board[y][x].Owner.Destroy();
+                        this.Board[y][x] = null;
+                        if(this.ParticleArc != null)
+                        {
+                            this.Space.CreateAtPosition(this.ParticleArc, this.Owner.Transform.Translation + 
+                                Real3(x - this.BoardAdjustmentX, y - this.BoardAdjustmentY, 2.0));
+                        }
+                        
+                    }
+                    else
+                    {
+                        this.Board[y][x].Type = prevTile;
+                    }
+                    
+                    /* Debug Used to find last tile clicked on.*/
+                    /*var actions = Actions.Sequence(this.Owner.Actions);
+                    var tile = this.Board[y][x];
+                    var color = tile.Owner.Sprite.Color;
+                    Action.Property(actions, @tile.Owner.Sprite.Color, Real4(1,1,1,1), 0.1, Ease.Linear);
+                    Actions.Delay(actions, 5.0);
+                    Action.Property(actions, @tile.Owner.Sprite.Color,  color, 0.1, Ease.Linear);*/
+                    if(this.Board[y][x] != null){
+                        
+                        this.Board[y][x].Processed = false;
+                     }
+                } 
+            }
+        }
+        /*
+        foreach(var row in this.Board){
+            foreach(var element in row){
+                if(element != null){
+                    Console.Write("`element.Type` ");
+                }else{
+                    Console.Write(". ");
+                }
+            }
+            Console.WriteLine();
+        }*/
+        
+        if(count >= this.RequiredTileNumber)
+        {
+            Console.DumpValue(prevTile);
+            /* Determines your points for each match and gives you more points for tile. */
+            var largerIsBetter = ((count / 0.1) * 10) * count;
+            if(prevTile == TileNumber.Shuffle || prevTile == TileNumber.Destory)
+            {
+                largerIsBetter = 0;
+            }
+            else if(prevTile == TileNumber.Time)
+            {
+                largerIsBetter = 0;
+                this.Space.CreateAtPosition(Archetype.ZAWARUDO,
+                    this.GivePos(this.BoardsizeX + 5.75,this.BoardAdjustmentY - 1));
+            }
+            if(this.GameType != 0)
+            {
+                this.Space.CreateAtPosition(Archetype.PointsGained,
+                    this.GivePos(this.BoardsizeX + 5.75,this.BoardAdjustmentY + 2));
+            }
+            // If this is a season tile it will send a season change event
+            if(prevTile <= 4)
+            {
+                this.Space.DispatchEvent(Events.ChangeSeasonsEvent, ChangeSeasonsEvent(prevTile));
+            }
+            this.Space.DispatchEvent(Events.PointsGainedEvent, new PointsGainedEvent(Math.Floor(largerIsBetter) as Integer)); 
+            /* run through all of the rows */
+            for(var i = 0; i < this.BoardsizeX; ++i)
+            {
+                /* make the tiles in that row fall */
+                this.Owner.TileFalling.BlockFall(this, i);
+            }
+        }
+    }
+    /* This code finds all the tiles of the tile you choose after the destroy block and labels them to be destroyd. */
+    function TileDestroy(tile : Integer)
+    {
+        for(var y = 0; y < this.BoardsizeY; ++y)
+        {
+            for(var x = 0; x < this.BoardsizeX; ++x)
+            {
+                if(this.Board[y][x].Type == tile)
+                {
+                    this.Board[y][x].Type = this.Cleared;
+                    
+                }
+            }
+        }
+        
+    }
+
+}

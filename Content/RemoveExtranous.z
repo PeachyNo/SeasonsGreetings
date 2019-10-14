@@ -1,0 +1,34 @@
+class RemoveExtranous : ZilchComponent
+{
+    var FatherTime : Timer;
+    
+    var Live : Real = 0;
+    var End : Real = 2;
+    
+    var Timer : Cog;
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        /*if(this.Space.FindObjectByName("Timer") != null)
+        {
+            this.FatherTime = this.Space.FindObjectByName("Timer").Timer;
+            this.Live = (this.FatherTime.RealTime as Integer) - 2;
+        }*/
+        //this.Timer = this.Space.FindObjectByName("Timer");
+    }
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        this.Live += event.Dt;
+        /*if(this.Timer != null)
+        {
+            this.End = this.Timer.Timer.RealTime;
+        }*/
+        if(this.Live >= this.End)
+        {
+            
+            this.Owner.Destroy();
+        }
+    }
+}

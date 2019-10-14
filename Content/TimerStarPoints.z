@@ -1,0 +1,190 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    TimerStarPoints
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    6/15/2016
+Brief Description:
+  
+*******************************************************************************/
+class TimerStarPoints : ZilchComponent
+{
+    // the smallest the object can be
+    [Property]
+    var MinSize : Real = 0.3;
+    // how quickly the object will change 
+    [Property]
+    var EaseTime : Real = 1.0;
+    // how the object wiill change
+    [Property]
+    var EaseType : Ease = Ease.QuadIn;
+    // the abject it will sawn foor the stars
+    [Property]
+    var StarArc : Archetype = Archetype.Star;
+    // the particle to spawn
+    [Property]
+    var StarParticle : Archetype = Archetype.StarParticle;
+    // a pointer to the timer object
+    [Property]
+    var TimerPath : CogPath;
+    // the name of the data it will store/create
+    [Property]
+    var DataName : String = "Data";
+    // the archetype of the data that will be saved
+    [Property]
+    var DataArc : Archetype;
+    
+    // how much the object will change with each point
+    var SizeChange : Real;
+    
+    // hat the previous time was
+    var LastTime : Integer;
+    
+    // keep track of the data too store
+    var DataCog : Cog;
+    
+    // keep track of the stars
+    var Star1 : Cog;
+    var Star2 : Cog;
+    var Star3 : Cog;
+    
+    // keep track of the star particles
+    var Star1Particle : Cog;
+    var Star2Particle : Cog;
+    var Star3Particle : Cog;
+    
+    // keep track of the stars on the win screen
+    var Star1Win : Cog;
+    var Star2Win : Cog;
+    var Star3Win : Cog;
+    
+    
+    var Star1WinParticle : Cog;
+    var Star2WinParticle : Cog;
+    var Star3WinParticle : Cog;
+    
+    
+    // the value that the timer needs to reach to get rid of a star 
+    var Star1Val : Integer = 0;
+    var Star2Val : Integer = 0;
+    var Star3Val : Integer = 0;
+    
+    // the timer object
+    var TimerCog : Cog;
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Space, Events.WinLoseEvent, this.OnWinLoseEvent);
+        
+        // set the timer object
+        this.TimerCog = this.TimerPath.Cog;
+        
+        // set the size chane to the current area minus the minimum size all divided by the starting time
+        this.SizeChange = (this.Owner.Area.Size.X - this.MinSize)/this.TimerCog.Timer.DisplayTime;
+        
+        // set the valuse for  getting the stars
+        this.Star1Val = 0;
+        this.Star2Val = this.TimerCog.Timer.DisplayTime / 10;
+        this.Star3Val = this.TimerCog.Timer.DisplayTime / 4;
+        
+        // set the timer tracker
+        this.LastTime = this.TimerCog.Timer.DisplayTime;
+        
+        // find the stars on the win screen
+        this.Star1Win = this.Space.FindObjectByName("YellowStar1");
+        this.Star2Win = this.Space.FindObjectByName("YellowStar2");
+        this.Star3Win = this.Space.FindObjectByName("YellowStar3");
+        
+        
+        this.Star1WinParticle = this.Space.FindObjectByName("StarParticle1");
+        this.Star2WinParticle = this.Space.FindObjectByName("StarParticle2");
+        this.Star3WinParticle = this.Space.FindObjectByName("StarParticle3");
+        
+        // spawn in the stars and their particles
+        this.Star1 = this.Space.CreateAtPosition(this.StarArc, Real3(
+            this.Owner.Transform.Translation.X + this.MinSize + (this.SizeChange*this.Star1Val),
+            this.Owner.Transform.Translation.Y + 1.25, this.Owner.Transform.Translation.Z));
+        this.Star1Particle = this.Space.CreateAtPosition(this.StarParticle, Real3(
+            this.Owner.Transform.Translation.X + this.MinSize + (this.SizeChange*this.Star1Val),
+            this.Owner.Transform.Translation.Y + 1.25, this.Owner.Transform.Translation.Z + 1));
+        this.Star1.Sprite.Visible = true;
+        
+        this.Star2 = this.Space.CreateAtPosition(this.StarArc, Real3(
+            this.Owner.Transform.Translation.X + this.MinSize + (this.SizeChange*this.Star2Val),
+            this.Owner.Transform.Translation.Y + 1.25, this.Owner.Transform.Translation.Z));
+        this.Star2Particle = this.Space.CreateAtPosition(this.StarParticle, Real3(
+            this.Owner.Transform.Translation.X + this.MinSize + (this.SizeChange*this.Star2Val),
+            this.Owner.Transform.Translation.Y + 1.25, this.Owner.Transform.Translation.Z + 1));
+        this.Star2.Sprite.Visible = true;
+        
+        this.Star3 = this.Space.CreateAtPosition(this.StarArc, Real3(
+            this.Owner.Transform.Translation.X + this.MinSize + (this.SizeChange*this.Star3Val),
+            this.Owner.Transform.Translation.Y + 1.25, this.Owner.Transform.Translation.Z));
+        this.Star3Particle = this.Space.CreateAtPosition(this.StarParticle, Real3(
+            this.Owner.Transform.Translation.X + this.MinSize + (this.SizeChange*this.Star3Val),
+            this.Owner.Transform.Translation.Y + 1.25, this.Owner.Transform.Translation.Z + 1));
+        this.Star3.Sprite.Visible = true;
+        
+        this.Star1Win.Sprite.Visible = true;
+        this.Star2Win.Sprite.Visible = true;
+        this.Star3Win.Sprite.Visible = true;
+        
+        //create or find the data to store the star info
+        this.DataCog = Zero.ObjectStore.RestoreOrArchetype(this.DataName, this.DataArc, this.Space);
+        
+        // set the star data
+        this.DataCog.StarData.Stars = 3;
+    }
+    
+    function OnWinLoseEvent(event : WinLoseEvent)
+    {
+        // if the player wins save the data for the stars
+        if(true == event.DidWin)
+        {
+            Zero.ObjectStore.Store(this.DataName, this.DataCog);
+        }
+    }
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        // if the timer has changed
+        if(this.LastTime > this.TimerCog.Timer.DisplayTime)
+        {
+            // make the bar shorter
+            Action.Property(this.Owner.Actions, @this.Owner.Area.Size, 
+                    Real2(this.Owner.Area.Size.X - this.SizeChange, this.Owner.Area.Size.Y), 
+                    this.EaseTime, this.EaseType);
+            // and reset the timer tracker
+            this.LastTime = this.TimerCog.Timer.DisplayTime;
+        }
+        
+        // if the points for the sats have been reached turn them to invisable
+        // nd make the star data keep track of the number of stars
+        if(this.TimerCog.Timer.DisplayTime == this.Star1Val && this.DataCog.StarData.Stars == 1)
+        {
+            this.Star1.Sprite.Visible = false;
+            this.Star1Win.Sprite.Visible = false;
+            this.DataCog.StarData.Stars = 0;
+            this.Star1Particle.SpriteParticleSystem.Visible = false;
+            this.Star1WinParticle.SpriteParticleSystem.Visible = false;
+        }
+        if(this.TimerCog.Timer.DisplayTime < this.Star2Val && this.DataCog.StarData.Stars == 2)
+        {
+            this.Star2.Sprite.Visible = false;
+            this.Star2Win.Sprite.Visible = false;
+            this.DataCog.StarData.Stars = 1;
+            this.Star2Particle.SpriteParticleSystem.Visible = false;
+            this.Star2WinParticle.SpriteParticleSystem.Visible = false;
+        }
+        if(this.TimerCog.Timer.DisplayTime < this.Star3Val && this.DataCog.StarData.Stars == 3)
+        {
+            this.Star3.Sprite.Visible = false;
+            this.Star3Win.Sprite.Visible = false;
+            this.DataCog.StarData.Stars = 2;
+            this.Star3Particle.SpriteParticleSystem.Visible = false;
+            this.Star3WinParticle.SpriteParticleSystem.Visible = false;
+        }
+    }
+}

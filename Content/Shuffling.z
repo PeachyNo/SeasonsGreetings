@@ -1,0 +1,74 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    Shuffling
+author      Alex Nash
+course      GAM100
+Project     Seasons Greetings
+due date    5/13/2019
+Brief Description:
+  Sets the new place of all tile on the board.
+*******************************************************************************/
+class Shuffling : ZilchComponent
+{
+    /* This is used to make the player only needs one of a special tile too use it. */
+    var OneIsEnough : Integer = 3;
+    [Dependency]
+    var Reactive: Reactive;
+    var RandomGenerator : Random = Random();
+    /* To hold all the tile on the board so we can than place them back in the board at a new position. */
+    var ShuffledBoard : Array[Tile] = new Array[Tile]();
+    /* Getting access to the board. */
+    [Property]
+    var BoardCogPath : CogPath;
+    var Board : TheBoard;
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Owner, Events.MouseUp, this.OnMouseUp);
+        /* Getting access to the board. */
+        this.Board = this.Space.FindObjectByName("Board").TheBoard;
+    }
+
+    function OnMouseUp(event : MouseEvent)
+    {
+        
+        /* This calls the function that actually moves the tiles on the board. */
+        this.ShuffleCode();
+        
+        var prevTile = this.Owner.Tile.Type;
+        this.Owner.Tile.Type = this.Board.Cleared;
+        this.Board.BoardCheck(prevTile, this.OneIsEnough+1);
+        this.CallShuffle();
+    }
+    function ShuffleCode()
+    {
+        /* Number of tiles that can be on the board in total. 
+            Also we need to initialize this everytime we run through the code. */
+        var shuffledCount : Integer = 140;
+        /* We need to place all the tiles on the board into this array so we can more easily randomize the board. */
+        for(var y = 0; y < this.Board.BoardsizeY; ++y)
+        {
+            for(var x = 0 ; x < this.Board.BoardsizeX; ++x)
+            {
+                this.ShuffledBoard.Add(this.Board.Board[y][x]);
+            }
+        }
+        
+        for(var y = 0; y < this.Board.BoardsizeY; ++y)
+        {
+            for(var x = 0 ; x < this.Board.BoardsizeX; ++x)
+            {
+                var index = this.RandomGenerator.RangeExclusiveMax(0, this.ShuffledBoard.Count);
+                this.Board.Board[y][x] = this.ShuffledBoard[index];
+                /* This is the reason ShuffledBoard needs to be initialized inside the function. */
+                this.ShuffledBoard.RemoveAt(index);
+            }
+        }
+    }
+    /* This is only hear because in the normal shuffle. We need to move the blocks after the shuffle block has
+        disappeared and we can't have the destroy the shuffle block code on the side power ups. */
+    function CallShuffle()
+    {
+        this.Board.Shuffle();
+    }
+}

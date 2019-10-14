@@ -1,0 +1,50 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    TimeAdder
+author      Alex Nash
+course      GAM100
+Project     Seasons Greetings
+due date    5/13/2019
+Brief Description:
+  Adds time to the timer script.
+*******************************************************************************/
+class TimeAdder : ZilchComponent
+{
+    [Property]
+    var TimeIncrease : Integer = 15;
+    /* This is used to make the player only needs one of a special tile too use it. */
+    var OneIsEnough : Integer = 3;
+    var FatherTime : Timer;
+    [Dependency]
+    var Reactive: Reactive;
+    var Tile : Tile;
+    var Board : TheBoard;
+    var Type : Integer;
+    function Initialize(init : CogInitializer)
+    {
+        
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Owner, Events.MouseUp, this.OnMouseUp);
+        if(this.Space.FindObjectByName("Timer") != null)
+        {
+            this.FatherTime = this.Space.FindObjectByName("Timer").Timer;
+        }
+        if(this.Space.FindObjectByName("Board") != null)
+        {
+            this.Board = this.Space.FindObjectByName("Board").TheBoard;
+        }
+        this.Tile = this.Owner.Tile;
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+    }
+    function OnMouseUp(event : MouseEvent)
+    {
+        this.Type = this.Tile.Type;
+        this.Tile.Type = this.Board.Cleared;
+        this.Board.BoardCheck(this.Type, this.OneIsEnough);
+        //Console.DumpValue(this.FatherTime);
+        this.FatherTime.Time += this.TimeIncrease;
+    }
+}

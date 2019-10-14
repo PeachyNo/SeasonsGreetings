@@ -1,0 +1,39 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    OffReactiveWL
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    6/15/2016
+Brief Description:
+  turns of reactive for the owner if the game is paused or ends
+*******************************************************************************/
+class OffReactiveWL : ZilchComponent
+{
+    [Dependency]
+    var Reactive : Reactive;
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.PausePlayEvent, this.OnPause);
+        Zero.Connect(this.Space, Events.WinLoseEvent, this.OnWinEvent);
+    }
+    
+    function OnWinEvent(event : WinLoseEvent)
+    {
+        //if the game ends stop reactive
+        this.Reactive.Active = false;
+    }
+    
+    function OnPause(event : PausePlayEvent)
+    {
+        //if the game is paused stop reactive or play it if continued
+        this.Reactive.Active = event.Condition;
+    }
+    
+    
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+    }
+}

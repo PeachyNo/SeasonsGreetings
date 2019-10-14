@@ -1,0 +1,198 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    OrderStarPoints
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    6/15/2016
+Brief Description:
+  this keeps track of whether or not the player gets a star and awards it 
+*******************************************************************************/
+class OrderStarPoints : ZilchComponent
+{
+    //have the function to adjust size
+    [Dependency]
+    var PointBar : PointBar;
+    // the size that is the smallest it should be
+    [Property]
+    var MinSize : Real = 0.3;
+    //for the action time
+    [Property]
+    var EaseTime : Real = 1.0;
+    //for the action
+    [Property]
+    var EaseType : Ease = Ease.QuadIn;
+    //get information on how much the player has moved and what the goal is
+    [Property]
+    var BoardPath : CogPath;
+    //star to spawn in
+    [Property]
+    var StarArc : Archetype = Archetype.Star;
+    // the particle to spawn
+    [Property]
+    var StarParticle : Archetype = Archetype.StarParticle;
+    //the data name it stores
+    [Property]
+    var DataName : String = "Data";
+    // data archtype to store
+    [Property]
+    var DataArc : Archetype;
+    
+    // how much the size should change on the bar
+    var SizeChange : Real;
+    // the best posivle score the player can get
+    var BestScore : Integer;
+    // keep track of the data stored
+    var DataCog : Cog;
+    // how many points the player has
+    var Points : Integer = 0;
+    
+    // these will keep track of the three stor 
+    var Star1 : Cog;
+    var Star2 : Cog;
+    var Star3 : Cog;
+    
+    // the stars on the win screen
+    var Star1Win : Cog;
+    var Star2Win : Cog;
+    var Star3Win : Cog;
+    
+    var Star1WinParticle : Cog;
+    var Star2WinParticle : Cog;
+    var Star3WinParticle : Cog;
+    
+    // track how much the player has gone through the year
+    var Tracker : Integer = 1;
+    
+    //the amount of points the plyer must have left to get the star
+    var Star1Val : Integer = 0;
+    var Star2Val : Integer = 0;
+    var Star3Val : Integer = 0;
+    // keeps track of the board
+    var Board : Cog;
+    
+    // keep track of the particle it will spawn
+    var Star1Particle : Cog;
+    var Star2Particle : Cog;
+    var Star3Particle : Cog;
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Space, Events.PointsGainedEvent, this.OnPointsGained);
+        Zero.Connect(this.Space, Events.WinLoseEvent, this.OnWinLoseEvent);
+        
+        // Board = the board
+        this.Board = this.BoardPath.Cog;
+        
+        // bestscore = to the goal times 4
+        this.BestScore = this.Board.WinLose4Order.PointsWin * 4;
+        
+        // sizechange = the current size of the bar minus the minum size all divided by the number of moves the player has
+        this.SizeChange = (this.Owner.Area.Size.X - this.MinSize)/this.Board.WinLose4Order.Moves;
+        
+        // points = the number of moves the player has
+        this.Points = this.Board.WinLose4Order.Moves;
+        
+        // create the stars and set their values
+        this.Star1Val = 0;
+        this.Star2Val = (this.Board.WinLose4Order.Moves - this.BestScore) / 3;
+        this.Star3Val = ((this.Board.WinLose4Order.Moves - this.BestScore) * 3)/4;
+        
+        this.Star1Win = this.Space.FindObjectByName("YellowStar1");
+        this.Star2Win = this.Space.FindObjectByName("YellowStar2");
+        this.Star3Win = this.Space.FindObjectByName("YellowStar3");
+        
+        
+        this.Star1WinParticle = this.Space.FindObjectByName("StarParticle1");
+        this.Star2WinParticle = this.Space.FindObjectByName("StarParticle2");
+        this.Star3WinParticle = this.Space.FindObjectByName("StarParticle3");
+        
+        this.Star1 = this.Space.CreateAtPosition(this.StarArc, Real3(
+            this.Owner.Transform.Translation.X + this.MinSize + (this.SizeChange*this.Star1Val),
+            this.Owner.Transform.Translation.Y + 1.25, this.Owner.Transform.Translation.Z));
+        this.Star1Particle = this.Space.CreateAtPosition(this.StarParticle, Real3(
+            this.Owner.Transform.Translation.X + this.MinSize + (this.SizeChange*this.Star1Val),
+            this.Owner.Transform.Translation.Y + 1.25, this.Owner.Transform.Translation.Z + 1));
+        this.Star1.Sprite.Visible = true;
+        
+        
+        this.Star2 = this.Space.CreateAtPosition(this.StarArc, Real3(
+            this.Owner.Transform.Translation.X + this.MinSize + (this.SizeChange*this.Star2Val),
+            this.Owner.Transform.Translation.Y + 1.25, this.Owner.Transform.Translation.Z));
+        this.Star2Particle = this.Space.CreateAtPosition(this.StarParticle, Real3(
+            this.Owner.Transform.Translation.X + this.MinSize + (this.SizeChange*this.Star2Val),
+            this.Owner.Transform.Translation.Y + 1.25, this.Owner.Transform.Translation.Z + 1));
+        this.Star2.Sprite.Visible = true;
+        
+        
+        this.Star3 = this.Space.CreateAtPosition(this.StarArc, Real3(
+            this.Owner.Transform.Translation.X + this.MinSize + (this.SizeChange*this.Star3Val),
+            this.Owner.Transform.Translation.Y + 1.25, this.Owner.Transform.Translation.Z));
+        this.Star3Particle = this.Space.CreateAtPosition(this.StarParticle, Real3(
+            this.Owner.Transform.Translation.X + this.MinSize + (this.SizeChange*this.Star3Val),
+            this.Owner.Transform.Translation.Y + 1.25, this.Owner.Transform.Translation.Z + 1));
+        this.Star3.Sprite.Visible = true;
+        
+        this.Star1Win.Sprite.Visible = true;
+        this.Star2Win.Sprite.Visible = true;
+        this.Star3Win.Sprite.Visible = true;
+        
+        
+        // makes or fins the data that will be stored or changed
+        this.DataCog = Zero.ObjectStore.RestoreOrArchetype(this.DataName, this.DataArc, this.Space);
+        
+        this.DataCog.StarData.Stars = 3;
+    }
+    
+    function OnPointsGained(event : PointsGainedEvent)
+    {
+        // shrink the bar 
+        Action.Property(this.Owner.Actions, @this.Owner.Area.Size, 
+                    Real2(this.Owner.Area.Size.X - this.SizeChange, this.Owner.Area.Size.Y), 
+                    this.EaseTime, this.EaseType);
+        
+        // subtract from the number of moves the player has
+        --this.Points;
+        
+        // checks if the number of moves left is less than the star values
+        // if so the playe loses the star
+        if(this.Points == this.Star1Val && this.DataCog.StarData.Stars == 1)
+        {
+            this.Star1.Sprite.Visible = false;
+            this.Star1Win.Sprite.Visible = false;
+            this.DataCog.StarData.Stars = 0;
+            this.Star1Particle.SpriteParticleSystem.Visible = false;
+            this.Star1WinParticle.SpriteParticleSystem.Visible = false;
+        }
+        if(this.Points < this.Star2Val && this.DataCog.StarData.Stars == 2)
+        {
+            this.Star2.Sprite.Visible = false;
+            this.Star2Win.Sprite.Visible = false;
+            this.DataCog.StarData.Stars = 1;
+            this.Star2Particle.SpriteParticleSystem.Visible = false;
+            this.Star2WinParticle.SpriteParticleSystem.Visible = false;
+        }
+        if(this.Points < this.Star3Val && this.DataCog.StarData.Stars == 3)
+        {
+            this.Star3.Sprite.Visible = false;
+            this.Star3Win.Sprite.Visible = false;
+            this.DataCog.StarData.Stars = 2;
+            this.Star3Particle.SpriteParticleSystem.Visible = false;
+            this.Star3WinParticle.SpriteParticleSystem.Visible = false;
+        }
+    }
+    
+    function OnWinLoseEvent(event : WinLoseEvent)
+    {
+        // if the player wins the star data is saved
+        if(true == event.DidWin)
+        {
+            Zero.ObjectStore.Store(this.DataName, this.DataCog);
+        }
+    }
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+    }
+}

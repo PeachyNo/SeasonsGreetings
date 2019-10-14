@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "DisplayStars",
+		uint64 ResourceId = 57898484c1c8aa07,
+	},
+},

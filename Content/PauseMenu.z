@@ -1,0 +1,55 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    PauseMenu
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    6/15/2016
+Brief Description:
+  this will move the pause menu in and out when needed
+*******************************************************************************/
+class PauseMenu : ZilchComponent
+{
+    // how quickly and how thhe menu will move
+    [Property]
+    var EaseTime : Real = 1;
+    [Property]
+    var EaseType : SampleCurve;
+    
+    //where the menu will move
+    [Property]
+    var Where : Real3 = Real3(0.0, 0.0, 0.0);
+    
+    // where it came from
+    var Origin : Real3 = Real3(0.0, 0.0, 0.0);
+    
+    function Initialize(init : CogInitializer)
+    {
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Space, Events.PausePlayEvent, this.OnPause);
+        // set where it came from
+        this.Origin = this.Owner.Transform.Translation;
+    }
+    
+    function OnPause(event : PausePlayEvent)
+    {
+        // if the pausedmove the menu to the middle
+        if(event.Condition == false)
+        {
+            var masterSeq = Action.Group(this.Owner.Actions);
+            Action.Property(masterSeq, @this.Owner.Transform.Translation,
+                            this.Where, this.EaseTime, this.EaseType);
+        }
+        // if unpaused move th menu back
+        else
+        {
+            var masterSeq = Action.Group(this.Owner.Actions);
+                Action.Property(masterSeq, @this.Owner.Transform.Translation,
+                            this.Origin, this.EaseTime, this.EaseType);
+        }
+    }
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+    }
+}

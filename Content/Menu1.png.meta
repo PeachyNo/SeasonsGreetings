@@ -1,0 +1,27 @@
+ImageContent = 
+{
+	ContentTags = 
+	{
+		Array Tags = 
+		[
+			"BasicUI",
+		],
+	},
+	SpriteSourceBuilder = 
+	{
+		string Name = "Menu1",
+		uint64 ResourceId = 5449970acebe2638,
+		uint64 AtlasId = 5274cf95e4a661fd,
+		uint FrameSizeX = 512,
+		uint FrameSizeY = 512,
+		uint FrameCount = 1,
+		float FrameDelay = 0.0833332986,
+		float OriginX = 256,
+		float OriginY = 256,
+		float PixelsPerUnit = 64,
+		bool Smoothing = false,
+		bool Looping = true,
+		Vec4 Slices = [0, 0, 0, 0],
+		SpriteFill Fill = Stretch,
+	},
+},

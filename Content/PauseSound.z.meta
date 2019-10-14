@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "PauseSound",
+		uint64 ResourceId = 57855d0c8b75392d,
+	},
+},

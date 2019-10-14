@@ -1,0 +1,78 @@
+ /*******************************************************************************
+ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+ filename:    Button
+ author:      Dakota Rice-Narusch and Noah Reiniger
+ course:      GAME100
+ Brief Description:
+    This is the code for use on a button. Makes the button change depending on 
+    if the cursor hovers over the button, clicks. 
+*******************************************************************************/
+class Button : ZilchComponent
+{
+
+    
+    
+    [Dependency]
+    var Sprite: Sprite;
+    
+    [Dependency]
+    var Reactive: Reactive;
+    
+    
+    
+    /******************************************************************************
+    Function: Initialize
+    Description: Initializes components for use in other functions. Initializes
+        functions OnMousEnter, OnMouseExit.
+    ******************************************************************************/
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Owner, Events.MouseEnter, this.OnMouseEnter);
+        Zero.Connect(this.Owner, Events.MouseExit, this.OnMouseExit);
+        Zero.Connect(this.Owner, Events.MouseDown, this.OnMouseDown);
+        Zero.Connect(this.Owner, Events.MouseUp, this.OnMouseUp);
+
+    }
+
+    /******************************************************************************
+    Function: OnMouseDown
+    Description: When the left mouse button is clicked down, changes the sprite 
+        slightly.
+    ******************************************************************************/
+    function OnMouseDown(event : ViewportMouseEvent)
+    {
+        // Become duller to show clicking
+        this.Owner.Sprite.Color = this.Owner.Sprite.Color + Real4(0.0, 0.0, 0.0, 0.5 - 
+                                    this.Owner.Sprite.Color.W);
+    }
+    
+    function OnMouseUp(event : ViewportMouseEvent)
+    {
+        // Become duller to show clicking
+        this.Owner.Sprite.Color = this.Owner.Sprite.Color - Real4(0.0, 0.0, 0.0, 0.5 + 
+                                    this.Owner.Sprite.Color.W);
+    }
+
+    /******************************************************************************
+    Function: OnMouseExit
+    Description: When the mouse exits the sprite, change it back to original color.
+    ******************************************************************************/
+    function OnMouseExit(event : ViewportMouseEvent)
+    {
+        this.Owner.Sprite.Color = this.Owner.Sprite.Color + Real4(0.0, 0.0, 0.0, 2.0 - 
+                                  this.Owner.Sprite.Color.W);
+    }
+
+    /******************************************************************************
+    Function: OnMouseEnter
+    Description: When the mouse enters the sprite, change sprite color to be a Bit
+        brighter.
+    ******************************************************************************/
+    function OnMouseEnter(event : ViewportMouseEvent)
+    {
+        // Become brighter to show you are hovering over the button
+        this.Owner.Sprite.Color = this.Owner.Sprite.Color + Real4(0.0, 0.0, 0.0, 0.75 - 
+                                  this.Owner.Sprite.Color.W);
+        
+    }
+}

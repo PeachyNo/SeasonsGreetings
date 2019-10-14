@@ -1,0 +1,58 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    SendSoundEvent
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    6/15/2016
+Brief Description:
+  this will dispatch the event to play sounds
+*******************************************************************************/
+class SendSoundEvent : ZilchComponent
+{
+    // the sound that will be sent
+    [Property]
+    var Sound : SoundCue;
+    // the pitch of that sound
+    [Property]
+    var Pitch : Real = 0.0;
+    // and the volume
+    [Property]
+    var Volume : Real = 1.0;
+    
+    [Dependency]
+    var Reactive : Reactive;
+    
+    function Initialize(init : CogInitializer)
+    {
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Owner, Events.MouseUp, this.OnMouseUp);
+    }
+    
+    function OnMouseUp(event : MouseEvent)
+    {
+        // if clicked on it will send the event to play sounds
+        this.Space.DispatchEvent(Events.PlaySoundEvent, PlaySoundEvent(this.Sound, this.Pitch, this.Volume));
+    }
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+    }
+}
+
+class PlaySoundEvent : ZilchEvent
+{
+    var Sound : SoundCue; 
+    var Pitch : Real;
+    var Volume : Real;
+    constructor(sound : SoundCue, pitch : Real, volume : Real) : base()
+    {
+        this.Sound = sound;
+        this.Pitch = pitch;
+        this.Volume = volume;
+    }
+    
+    
+    sends PlaySoundEvent : PlaySoundEvent;
+}
+

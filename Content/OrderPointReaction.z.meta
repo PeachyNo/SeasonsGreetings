@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "OrderPointReaction",
+		uint64 ResourceId = 57b2888324fdc237,
+	},
+},

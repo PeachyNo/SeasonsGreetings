@@ -1,0 +1,49 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    Currency
+author      Noah Reiniger
+course      GAM100
+Project     Seasons  Greetings
+due date    5/13/2016
+Brief Description:
+  This handles and keeps track of the game currency
+*******************************************************************************/
+class Currency : ZilchComponent
+{
+    
+    var Currency : Integer = 0;
+    
+    function Initialize(init : CogInitializer)
+    {
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Space, Events.ChangeCurrencyEvent, this.OnCurrencyEvent);
+        
+    }
+    
+    /* change the currency when the event is called */
+    function OnCurrencyEvent(event : ChangeCurrencyEvent)
+    {
+        // when the event is callled it will add the receved amount to the currency var
+        this.Currency += event.Amount;
+        //Console.WriteLine("`this.Currency`");
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        
+    }
+}
+
+/* this events tells currency when to change and by how much */
+class ChangeCurrencyEvent : ZilchEvent
+{
+    var Amount : Integer = 0;
+    
+    constructor(amount : Integer) : base()
+    {
+        this.Amount = amount;
+        
+    }
+    
+    sends ChangeCurrencyEvent : ChangeCurrencyEvent;
+}

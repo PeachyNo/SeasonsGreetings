@@ -1,0 +1,55 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    WinningAndLossing
+author      Alex Nash
+course      GAM100
+Project     Seasons Greetings
+due date    5/13/2019
+Brief Description:
+  My attempt at a win and lose screen.
+*******************************************************************************/
+class WinningAndLossing : ZilchComponent
+{
+    [Property]
+    var WinLevelToLoad : Level = null;
+    [Property]
+    var LoseLevelToLoad : Level = null;
+
+    [Property]
+    var PointsWin : Integer = 100000;
+    var PointingPoints : Points;
+    var FatherTime : Timer;
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        this.FatherTime = this.Space.FindObjectByName("Timer").Timer;
+        this.PointingPoints = this.Space.FindObjectByName("Points").Points;
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        if(this.FatherTime.DisplayTime == 0)
+        {
+            //this.Space.LoadLevel(this.LoseLevelToLoad);
+            this.Space.DispatchEvent(Events.WinLoseEvent, WinLoseEvent(false));
+            Zero.Disconnect(this.Space, Events.LogicUpdate, this);
+        }
+        if(this.PointingPoints.Points >= this.PointsWin)
+        {
+            //this.Space.LoadLevel(this.WinLevelToLoad);
+            this.Space.DispatchEvent(Events.WinLoseEvent, WinLoseEvent(true));
+            Zero.Disconnect(this.Space, Events.LogicUpdate, this);
+        }
+    }
+}
+
+class WinLoseEvent : ZilchEvent
+{
+    var DidWin : Boolean = true;
+    constructor(didWin : Boolean) : base()
+    {
+        
+        this.DidWin = didWin;
+    }
+    sends WinLoseEvent : WinLoseEvent;
+}

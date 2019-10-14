@@ -1,0 +1,11 @@
+class StarData : ZilchComponent
+{
+    /*
+    Stars == 0 the player has not earned any stars
+    Stars == 1 the player has earned 1
+    Stars == 2 the player has earned 2
+    Stars == 3 the player has earned 3
+    */
+    [Serialized]
+    var Stars : Integer = 0;
+}

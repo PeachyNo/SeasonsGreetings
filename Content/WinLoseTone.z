@@ -1,0 +1,43 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    WinLoseTone
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    6/15/2016
+Brief Description:
+  plays a tone if the win or lose event is sent
+*******************************************************************************/
+class WinLoseTone : ZilchComponent
+{
+    // if it should send the event on win or lose
+    [Property]
+    var WinOrLose : Boolean = true;
+    
+    // the sound it  will send
+    [Property]
+    var Sound : SoundCue;
+    
+    // the pitch that the sound will be
+    [Property]
+    var Pitch : Real = 0.0;
+    
+    // how loud it will be
+    [Property]
+    var Volume : Real = 1.0;
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.WinLoseEvent, this.OnWinLoseEvent);
+    }
+    
+    function OnWinLoseEvent(event : WinLoseEvent)
+    {
+        // if the player gets the apropriate win/lose condition
+        if(this.WinOrLose == event.DidWin)
+        {
+            // send the e=sound event
+            this.Space.DispatchEvent(Events.PlaySoundEvent, PlaySoundEvent(this.Sound, this.Pitch, this.Volume));
+        }
+    }
+}

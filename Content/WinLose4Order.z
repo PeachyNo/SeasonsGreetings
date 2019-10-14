@@ -1,0 +1,108 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    WinLose4Order
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    6/15/2016
+Brief Description:
+  this sends the win lose event forthe second game mode
+*******************************************************************************/
+class WinLose4Order : ZilchComponent
+{
+    // how many points are needed
+    [Property]
+    var PointsWin : Integer = 10;
+    
+    // how many moves the player has
+    [Property]
+    var Moves : Integer = 50;
+    
+    // keeps track of how many points the player has
+    var CurrentPoints : Integer = 0;
+    
+    // keeps track of what season the player is on
+    var SeasonNum : Integer = 0;
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Space, Events.IncreaseMultiplierEvent, this.OnMultiGained);
+        Zero.Connect(this.Space, Events.PointsGainedEvent, this.OnPointsGained);
+        
+        // find the object in the level that shows the goal
+        var goalText = this.Space.FindObjectByName("Goal");
+        // make it show the goal
+        goalText.SpriteText.Text = "Goal: `this.PointsWin`";
+    }
+    
+    function OnPointsGained(event : PointsGainedEvent)
+    {
+        // clicks remover a move
+        --this.Moves;
+    }
+    
+    function OnMultiGained(event : IncreaseMultiplierEvent)
+    {
+        //event.Multiplier
+        // if the player did not go in order 
+        if(event.Multiplier == 1)
+        {
+            // reset the season tracker
+            this.SeasonNum = 0;
+            return;
+        }
+        // if the player is going in order
+        else 
+        {
+            // if the player gpoes in order all the way
+            if(this.SeasonNum == 4)
+            {
+                // reset the counter
+                this.SeasonNum = 0;
+            }
+            if(this.SeasonNum == 0)
+            {
+                // and add to the current points
+                ++this.CurrentPoints;
+            }
+            // add to the season tracker
+            ++this.SeasonNum;
+            
+        }
+    }
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        // find the point object 
+        var pointsText = this.Space.FindObjectByName("Points");
+        //if it is found
+        if(pointsText !=  null)
+        {
+            // make it display the points
+            pointsText.SpriteText.Text = "Points: `this.CurrentPoints`";
+        }
+        // find the object to display the moves
+        var movesText = this.Space.FindObjectByName("Moves");
+        // if it is found
+        if(movesText !=  null)
+        {
+            // make it display the number of moves
+            movesText.SpriteText.Text = "Moves: `this.Moves`";
+        }
+        // if the player has gained the number of points required to win
+        if(this.CurrentPoints >= this.PointsWin)
+        {
+            // send the win event and stop checking for it
+            this.Space.DispatchEvent(Events.WinLoseEvent, WinLoseEvent(true));
+            Zero.Disconnect(this.Space, Events.LogicUpdate, this);
+        }
+        // if the player runs out of moves 
+        else if(this.Moves == 0)
+        {
+            // send the lose event and stop checking if win/lose
+            this.Space.DispatchEvent(Events.WinLoseEvent, WinLoseEvent(false));
+            Zero.Disconnect(this.Space, Events.LogicUpdate, this);
+        }
+    }
+}

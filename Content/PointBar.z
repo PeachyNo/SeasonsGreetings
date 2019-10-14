@@ -1,0 +1,77 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    PointsBar
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    6/15/2016
+Brief Description:
+  has two functions to make score bars bigger
+*******************************************************************************/
+class PointBar : ZilchComponent
+{
+    [Dependency]
+    var Area : Area;
+    
+    function Initialize(init : CogInitializer)
+    {
+        //Zero.Connect(this.Owner, Events.MouseUp, this.OnMouseUp);
+        //this.Area.Size.Y = 0.01;
+    }
+    
+    // this function grwos the bar horisontally
+    function GrowX(score : Integer, maxSize : Real, pointsGained : Integer, easeTime : Real, easeType : Ease)
+    {
+        // how much it will change
+        var change = (maxSize/score) * pointsGained;
+        // how big it is
+        var scale = this.Area.Size;
+        
+        // if adding onto the size wont make the object exeed the max size
+        if(scale.X + change < maxSize)
+        {
+            // set the size to the how much it will chnge
+            scale.X += change;
+            Action.Property(this.Owner.Actions,
+                    @this.Area.Size,
+                    scale,
+                    easeTime,
+                    easeType);
+        }
+        // if not
+        else
+        {
+            // set it to the max size
+            scale.X += change;
+            Action.Property(this.Owner.Actions, @this.Area.Size, 
+                    Real2(maxSize, this.Area.Size.Y), easeTime, easeType);
+        }
+    }
+    
+    function GrowY(score : Integer, maxSize : Real, pointsGained : Integer, easeTime : Real, easeType : Ease)
+    {
+        // how much it will change
+        var change = (maxSize/score) * pointsGained;
+        // how big it is
+        var scale = this.Area.Size;
+        
+        // if adding onto the size wont make the object exeed the max size
+        if(scale.Y + change < maxSize)
+        {
+            // set the size to the how much it will chnge
+            scale.Y += change;
+            Action.Property(this.Owner.Actions,
+                    @this.Area.Size,
+                    scale,
+                    easeTime,
+                    easeType);
+        }
+        // if not
+        else
+        {
+            // set it to the max size
+            Action.Property(this.Owner.Actions, @this.Area.Size, 
+                    Real2(this.Area.Size.X, maxSize), easeTime, easeType);
+        }
+    }
+}

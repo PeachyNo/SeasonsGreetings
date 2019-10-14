@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "OffReactiveWL",
+		uint64 ResourceId = 57b66d135fb2a74f,
+	},
+},

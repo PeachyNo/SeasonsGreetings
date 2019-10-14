@@ -1,0 +1,109 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    Points
+author      Alex Nash
+course      GAM100
+Project     Seasons Greetings
+due date    5/13/2019
+Brief Description:
+  This will display the timer
+*******************************************************************************/
+class Points : ZilchComponent
+{
+    sends PointsGainedEvent : PointsGainedEvent;
+    
+    /*[Property]
+    var EaseTime : Real = 1;
+    
+    [Property]
+    var EaseType : Ease = Ease.QuadIn;
+    
+    var PointsGoal : Integer = 250000;
+    
+    var Height : Real = 0;
+    */
+    
+    var Points : Integer = 0;
+    
+    var Multiplier : Integer = 1;
+    
+    var SeasonNum : Integer = 4;
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Space, Events.PointsGainedEvent, this.OnPointsGained);
+        Zero.Connect(this.Space, Events.IncreaseMultiplierEvent, this.OnMultiGained);
+        /*this.Height = this.Owner.Transform.Scale.Y;*/
+    }
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        if(this.Owner.SpriteText != null)
+        {
+            var pointsText = this.Space.FindObjectByName("Points");
+            
+            pointsText.SpriteText.Text = "Points: `this.Points`";
+        }
+        /*var masterSeq = Action.Sequence(this.Owner.Actions);
+        else if(this.Owner.Sprite != null)
+        {
+            Action.Property(masterSeq, @this.Owner.Transform.Scale.Y,
+                        (this.Height / this.PointsGoal * this.Points), this.EaseTime, this.EaseType);
+            //this.Owner.Area.Size.Y += (this.Height / this.PointsGoal * this.Points);
+            Console.WriteLine("it happened!!-------------------------`this.Points`");
+        }*/
+        
+    }
+    function OnMultiGained(event : IncreaseMultiplierEvent)
+    {
+        //this.Multiplier = event.Multiplier;
+        if(event.Multiplier == 1)
+        {
+            this.Multiplier = 1;
+            return;
+        }
+        else if(this.Multiplier < 4)
+        {
+            if(this.SeasonNum == 4)
+            {
+                this.SeasonNum = 0;
+            }
+            if(this.SeasonNum == 0)
+            {
+                this.Multiplier *= 2;
+            }
+            ++this.SeasonNum;
+            
+        }
+    }
+    function OnPointsGained(event : PointsGainedEvent)
+    {
+        this.Points += (event.CurrentPoints * this.Multiplier);
+        
+    }
+    
+}
+
+
+class PointsGainedEvent : ZilchEvent
+{
+    var CurrentPoints : Integer = 0;
+    constructor(points : Integer) : base()
+    {
+        
+        this.CurrentPoints = points;
+    }
+}
+
+class IncreaseMultiplierEvent : ZilchEvent
+{
+    var Multiplier : Integer = 0;
+    constructor(multiplier : Integer) : base()
+    {
+        
+        this.Multiplier = multiplier;
+    }
+    sends IncreaseMultiplierEvent : IncreaseMultiplierEvent;
+}
+
+

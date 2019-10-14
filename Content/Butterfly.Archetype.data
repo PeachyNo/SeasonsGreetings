@@ -1,0 +1,33 @@
+Cog = 
+{
+	LinkId = 
+	{
+		uint Id = 1,
+	},
+	Named = 
+	{
+		string Name = "music",
+	},
+	Archetyped = 
+	{
+		string Name = "57f874681e264b74:Butterfly",
+	},
+	Transform = 
+	{
+		Vec3 Translation = [-6.9089365, 9.99052525, 0],
+		Vec3 Scale = [1, 1, 1],
+		Quat Rotation = [0, 0, 0, 1],
+	},
+	SoundEmitter = 
+	{
+		float Volume = 1,
+		float Pitch = 0,
+		bool Positional = false,
+		int Version = 1,
+	},
+	SimpleSound = 
+	{
+		bool StartPlaying = true,
+		string CueName = "57f877e73a773d85:Butterfly",
+	},
+},

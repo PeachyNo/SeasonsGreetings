@@ -1,0 +1,7 @@
+ContentLibrary = 
+{
+	string Name = "Seasons_Greetings",
+	uint64 LibraryId = 57e9a44b8de18dcc,
+	string SourceControlType = "",
+	bool ReadOnly = false,
+},

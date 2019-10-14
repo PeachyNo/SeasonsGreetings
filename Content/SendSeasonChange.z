@@ -1,0 +1,53 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    SendSeasonChange
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    5/13/2019
+Brief Description:
+  this will send the season change events
+*******************************************************************************/
+class SendSeasonChange : ZilchComponent
+{
+    [Dependency]
+    var Reactive : Reactive;
+    
+    // which season the event is supposed to send
+    [Property]
+    var Season : Integer = 1;
+    
+    
+    function Initialize(init : CogInitializer)
+    {
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Owner, Events.MouseUp, this.OnMouseUp);
+        
+    }
+    
+    //when the owner is clicked on
+    function OnMouseUp(event : MouseEvent)
+    {
+        // it will send the event and also sendd the inputed season
+        //this.Space.DispatchEvent(Events.ChangeSeasonsEvent, ChangeSeasonsEvent(this.Season));
+    }
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+    }
+}
+
+// this event should be used for season changeing only/ or keeping track of the sesasons
+class ChangeSeasonsEvent : ZilchEvent
+{
+    var Season : Integer = 0;
+    
+    constructor(season : Integer) : base()
+    {
+        this.Season = season;
+        
+    }
+    
+    sends ChangeSeasonsEvent : ChangeSeasonsEvent;
+}
+

@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "SendSlideEvent",
+		uint64 ResourceId = 578c094478c69939,
+	},
+},

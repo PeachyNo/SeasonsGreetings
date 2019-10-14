@@ -1,0 +1,80 @@
+Cog = 
+{
+	LinkId = 
+	{
+		uint Id = 1,
+	},
+	Named = 
+	{
+		string Name = "TimeAdder",
+	},
+	Archetyped = 
+	{
+		string Name = "57ed14a6a68af163:Time",
+	},
+	Transform = 
+	{
+		Vec3 Translation = [0, 0, 0],
+		Vec3 Scale = [1, 1, 1],
+		Quat Rotation = [0, 0, 0, 1],
+	},
+	Sprite = 
+	{
+		bool Visible = true,
+		bool VisibilityCulling = true,
+		bool VisibilityEvents = true,
+		bool CastShadows = false,
+		Vec4 Color = [1, 1, 1, 1],
+		BlendMode BlendMode = Alpha,
+		SpriteGeometryMode GeometryMode = ZPlane,
+		string SpriteLayer = "57d4a9831891a58b:DISPLAY",
+		string SpriteSource = "57d36835b6fdf3ac:TimePU",
+		bool RenderMask = false,
+		bool FlipX = false,
+		bool FlipY = false,
+		bool AnimationActive = true,
+		float AnimationSpeed = 1,
+		uint StartFrame = 0,
+	},
+	Reactive = 
+	{
+		bool Active = true,
+		bool CaptureMouse = false,
+	},
+	Tile = 
+	{
+		int Cleared = 5,
+		int BlockDestroy = 10,
+	},
+	TimeAdder = 
+	{
+		int TimeIncrease = 10,
+	},
+	Area = 
+	{
+		Vec2 Size = [1, 1],
+		Location Origin = Center,
+	},
+	Button = 
+	{
+	},
+	SendSoundEvent = 
+	{
+		string Sound = "56ffafb84e01ba75:blip_triangle_1",
+		float Pitch = 0,
+		float Volume = 1,
+	},
+	OffReactiveWL = 
+	{
+	},
+	SoundEmitter = 
+	{
+		float Volume = 1,
+		float Pitch = 0,
+		bool Positional = true,
+		int Version = 1,
+	},
+	ListenShuffleFreeze = 
+	{
+	},
+},

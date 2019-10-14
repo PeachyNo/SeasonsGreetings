@@ -1,0 +1,87 @@
+/*******************************************************************************
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+filename    SlideShow
+author      Noah Reiniger
+course      GAM100
+Project     Seasons Greetings
+due date    6/15/2016
+Brief Description:
+  this will reave events to move the slides and it move apropriatly
+*******************************************************************************/
+class SlideShow : ZilchComponent
+{
+    // how quickly and how thhe menu will move
+    [Property]
+    var EaseTime : Real = 1;
+    
+    // how it will move
+    [Property]
+    var EaseType : Ease;
+    
+    // whic h slide it will be in the sequence
+    [Property]
+    var Number : Integer = 0;
+    
+    //where its left position will be
+    [Property]
+    var Left : Real3 = Real3(-30.0, -0.8, 0.0);
+    
+    // where its middle position will be
+    [Property]
+    var Middle : Real3 = Real3(0.0, -0.8, 0.0);
+    
+    // where its right positition will be
+    [Property]
+    var Right : Real3 = Real3(30.0, -0.8, 0.0);
+    
+    function Initialize(init : CogInitializer)
+    {
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Space, Events.SlideEvent, this.OnSlideEvent);
+        
+    }
+    
+    function OnSlideEvent(event : SlideEvent)
+    {
+        // if it is its turn to move to the middle 
+        if(event.Condition == this.Number)
+        {
+            // move it to the middle 
+            var masterSeq = Action.Group(this.Owner.Actions);
+            Action.Property(masterSeq, @this.Owner.Transform.Translation,
+                            this.Middle, this.EaseTime, this.EaseType);
+        }
+        // if it the slide that does move is to its left
+        else if(event.Condition < this.Number)
+        {
+            // mae sure it is in its right position
+            var masterSeq = Action.Group(this.Owner.Actions);
+            Action.Property(masterSeq, @this.Owner.Transform.Translation,
+                            this.Right, this.EaseTime, this.EaseType);
+        }
+        // if it the slide that does move is to its right
+        else
+        {
+            // make sure it is in its eft position
+            var masterSeq = Action.Group(this.Owner.Actions);
+            Action.Property(masterSeq, @this.Owner.Transform.Translation,
+                            this.Left, this.EaseTime, this.EaseType);
+        }
+    }
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+    }
+}
+
+class SlideEvent :  ZilchEvent
+{
+    var Condition : Integer = 0;
+    constructor(condition : Integer) : base()
+    {
+        
+        this.Condition = condition;
+    }
+    sends SlideEvent : SlideEvent;
+}
+

@@ -1,0 +1,3 @@
+This will destroy all
+of the blocks in its 
+area
